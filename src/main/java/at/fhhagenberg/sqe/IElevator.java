@@ -22,7 +22,7 @@ package at.fhhagenberg.sqe;
  * at zero for elevator 1.
  * 
  * Some elevator behavior is inherent and cannot be controlled:
- * Door opening & closing. Elevator doors automatically open when arriving at a floor and 
+ * Door opening and closing. Elevator doors automatically open when arriving at a floor and 
  * close before departing. When passengers are waiting to board an elevator, the doors will 
  * stay open until all passengers are boarded. Each open and close action takes 1 second.
  * Elevator buttons. Arriving passengers press the appropriate elevator button and the 
