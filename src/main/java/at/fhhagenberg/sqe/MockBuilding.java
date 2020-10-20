@@ -13,6 +13,7 @@ public class MockBuilding implements IElevator {
         mElevators = new MockElevator[nrOfElevators];
         for (int i = 0; i < nrOfElevators; i++) {
         	mElevators[i] = new MockElevator();
+        	mElevators[i].mServiceFloors = new MockFloor[floors];
 		}
         mFloors = new MockFloor[floors];
         for (int i = 0; i < floors; i++) {
@@ -93,6 +94,13 @@ public class MockBuilding implements IElevator {
 
     @Override
     public boolean getServicesFloors(int elevatorNumber, int floor) throws RemoteException {
+    	if(mElevators.length < elevatorNumber) {
+    		return false;
+    	}
+    	if(mElevators[elevatorNumber].mServiceFloors.length < floor) {
+    		return false;
+    	}
+    	
         return mElevators[elevatorNumber].mServiceFloors[floor] != null;
     }
 
