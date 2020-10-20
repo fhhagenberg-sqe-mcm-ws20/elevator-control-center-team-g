@@ -1,11 +1,10 @@
 package at.fhhagenberg.sqe;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.rmi.RemoteException;
 
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IElevatorTest {
 	@Test
@@ -173,12 +172,12 @@ public class IElevatorTest {
 			building.getServicesFloors(0, 0);
 			
 			building.setServicesFloors(0, 0, true);
-			
-			assertEquals(true, building.getServicesFloors(0, 0));
+
+			assertTrue(building.getServicesFloors(0, 0));
 			
 			building.setServicesFloors(0, 0, false);
-			
-			assertEquals(false, building.getServicesFloors(0, 0));
+
+			assertFalse(building.getServicesFloors(0, 0));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			fail("Unexpected exception");
