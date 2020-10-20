@@ -98,12 +98,6 @@ public class MockBuilding implements IElevator {
 
     @Override
     public boolean getServicesFloors(int elevatorNumber, int floor) throws RemoteException {
-    	if(mElevators.length < elevatorNumber) {
-    		return false;
-    	}
-    	if(mElevators[elevatorNumber].mServiceFloors.length < floor) {
-    		return false;
-    	}
         return mElevators[elevatorNumber].mServiceFloors[floor] != null;
     }
 
@@ -114,16 +108,6 @@ public class MockBuilding implements IElevator {
 
     @Override
     public void setCommittedDirection(int elevatorNumber, int direction) throws RemoteException {
-    	if(mElevators == null) {
-    		return;
-    	}
-    	if(mElevators.length == 0) {
-    		return;
-    	}
-    	if(mElevators[elevatorNumber] == null) {
-    		return;
-    	}
-    	
         mElevators[elevatorNumber].mCommittedDirection = direction;
     }
 
