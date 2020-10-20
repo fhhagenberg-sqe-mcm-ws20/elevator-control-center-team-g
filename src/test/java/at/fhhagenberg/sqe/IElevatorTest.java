@@ -185,4 +185,222 @@ public class IElevatorTest {
 		}
 	}
 	
+	@Test
+    public void testGetFloorHeightZero() {
+		MockBuilding building = new MockBuilding(1, 5, 0);
+		
+		try {
+			assertEquals(0, building.getFloorHeight());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetFloorHeight10() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		
+		try {
+			assertEquals(10, building.getFloorHeight());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorButtonNotPressed() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		
+		try {
+			assertEquals(false, building.getElevatorButton(0, 0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorButtonPressed() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mElevators[0].MockFloorButtonPressed[0] = true;
+		
+		try {
+			assertEquals(true, building.getElevatorButton(0, 0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorDoorStatus() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mElevators[0].mElevatorDoorStatus = IElevator.ELEVATOR_DOORS_OPEN;
+		
+		try {
+			assertEquals(IElevator.ELEVATOR_DOORS_OPEN, building.getElevatorDoorStatus(0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorFloor() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mElevators[0].mElevatorFloor = 3;
+		
+		try {
+			assertEquals(3, building.getElevatorFloor(0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorPosition() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mElevators[0].mElevatorPosition = 33;
+		
+		try {
+			assertEquals(33, building.getElevatorPosition(0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorSpeed() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mElevators[0].mElevatorSpeed = 33;
+		
+		try {
+			assertEquals(33, building.getElevatorSpeed(0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorWeight() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mElevators[0].mElevatorWeight = 33;
+		
+		try {
+			assertEquals(33, building.getElevatorWeight(0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetElevatorCapacity() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mElevators[0].mElevatorCapacity = 33;
+		
+		try {
+			assertEquals(33, building.getElevatorCapacity(0));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testFloorButtons() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		building.mFloors[1].mFloorButtonDOWN = true;
+		building.mFloors[2].mFloorButtonUP = true;
+		building.mFloors[3].mFloorButtonDOWN = true;
+		building.mFloors[3].mFloorButtonUP = true;
+		
+		try {
+			assertEquals(false, building.getFloorButtonDown(0));
+			assertEquals(false, building.getFloorButtonUp(0));
+			
+			assertEquals(true, building.getFloorButtonDown(1));
+			assertEquals(false, building.getFloorButtonUp(1));
+			
+			assertEquals(false, building.getFloorButtonDown(2));
+			assertEquals(true, building.getFloorButtonUp(2));
+			
+			assertEquals(true, building.getFloorButtonDown(3));
+			assertEquals(true, building.getFloorButtonUp(3));
+			
+			assertEquals(false, building.getFloorButtonDown(4));
+			assertEquals(false, building.getFloorButtonUp(4));
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetFloorNumOne() {
+		MockBuilding building = new MockBuilding(1, 1, 10);
+		
+		try {
+			assertEquals(1, building.getFloorNum());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetFloorNumTen() {
+		MockBuilding building = new MockBuilding(1, 10, 10);
+		
+		try {
+			assertEquals(10, building.getFloorNum());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testGetFloorNumZero() {
+		MockBuilding building = new MockBuilding(1, 0, 10);
+		
+		try {
+			assertEquals(0, building.getFloorNum());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	@Test
+    public void testSetGetTarget() {
+		MockBuilding building = new MockBuilding(1, 5, 10);
+		try {
+			building.setServicesFloors(0, 0, true);
+			building.setServicesFloors(0, 1, true);
+			building.setServicesFloors(0, 2, true);
+			building.setServicesFloors(0, 3, true);
+			building.setServicesFloors(0, 4, true);
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+			fail("Exception during setup");
+		}
+		
+		try {
+			building.setTarget(0, 1);
+			assertEquals(1, building.getTarget(0));
+			building.setTarget(0, 4);
+			assertEquals(4, building.getTarget(0));			
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
+	
+	
 }

@@ -14,6 +14,10 @@ public class MockBuilding implements IElevator {
         for (int i = 0; i < nrOfElevators; i++) {
         	mElevators[i] = new MockElevator();
         	mElevators[i].mServiceFloors = new MockFloor[floors];
+        	mElevators[i].MockFloorButtonPressed = new boolean[floors];
+        	for (int j = 0; j < floors; j++) {
+        		mElevators[i].MockFloorButtonPressed[j]  = false;
+			}
 		}
         mFloors = new MockFloor[floors];
         for (int i = 0; i < floors; i++) {
@@ -100,7 +104,6 @@ public class MockBuilding implements IElevator {
     	if(mElevators[elevatorNumber].mServiceFloors.length < floor) {
     		return false;
     	}
-    	
         return mElevators[elevatorNumber].mServiceFloors[floor] != null;
     }
 
@@ -149,7 +152,6 @@ public class MockBuilding implements IElevator {
     }
 
     public class MockElevator {
-
         public int mCommittedDirection = ELEVATOR_DIRECTION_UP;
         public int mElevatorAccel = 0;
         public int mElevatorDoorStatus = ELEVATOR_DOORS_CLOSED;
@@ -161,10 +163,10 @@ public class MockBuilding implements IElevator {
         public int mTarget = 0;
 
         public MockFloor[] mServiceFloors;
-
+        public boolean[] MockFloorButtonPressed;
 
         public boolean getElevatorButton(int floor){
-            return true;
+            return MockFloorButtonPressed[floor];
         }
     }
 }
