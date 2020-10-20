@@ -4,14 +4,20 @@ import java.rmi.RemoteException;
 
 public class MockBuilding implements IElevator {
 
-    private MockElevator[] mElevators;
-    private MockFloor[] mFloors;
+    public MockElevator[] mElevators;
+    public MockFloor[] mFloors;
     private int mFloorHeight;
     private int mClockTick = 15;
 
     public MockBuilding(int nrOfElevators, int floors, int floorHeight) {
         mElevators = new MockElevator[nrOfElevators];
+        for (int i = 0; i < nrOfElevators; i++) {
+        	mElevators[i] = new MockElevator();
+		}
         mFloors = new MockFloor[floors];
+        for (int i = 0; i < floors; i++) {
+        	mFloors[i] = new MockFloor();
+		}
         mFloorHeight = floorHeight;
     }
 
@@ -97,6 +103,16 @@ public class MockBuilding implements IElevator {
 
     @Override
     public void setCommittedDirection(int elevatorNumber, int direction) throws RemoteException {
+    	if(mElevators == null) {
+    		return;
+    	}
+    	if(mElevators.length == 0) {
+    		return;
+    	}
+    	if(mElevators[elevatorNumber] == null) {
+    		return;
+    	}
+    	
         mElevators[elevatorNumber].mCommittedDirection = direction;
     }
 
