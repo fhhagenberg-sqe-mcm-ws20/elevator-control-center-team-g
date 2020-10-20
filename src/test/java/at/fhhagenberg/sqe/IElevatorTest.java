@@ -213,7 +213,7 @@ public class IElevatorTest {
 		MockBuilding building = new MockBuilding(1, 5, 10);
 		
 		try {
-			assertEquals(false, building.getElevatorButton(0, 0));
+			assertFalse(building.getElevatorButton(0, 0));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			fail("Unexpected exception");
@@ -226,7 +226,7 @@ public class IElevatorTest {
 		building.mElevators[0].MockFloorButtonPressed[0] = true;
 		
 		try {
-			assertEquals(true, building.getElevatorButton(0, 0));
+			assertTrue(building.getElevatorButton(0, 0));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			fail("Unexpected exception");
@@ -320,20 +320,20 @@ public class IElevatorTest {
 		building.mFloors[3].mFloorButtonUP = true;
 		
 		try {
-			assertEquals(false, building.getFloorButtonDown(0));
-			assertEquals(false, building.getFloorButtonUp(0));
-			
-			assertEquals(true, building.getFloorButtonDown(1));
-			assertEquals(false, building.getFloorButtonUp(1));
-			
-			assertEquals(false, building.getFloorButtonDown(2));
-			assertEquals(true, building.getFloorButtonUp(2));
-			
-			assertEquals(true, building.getFloorButtonDown(3));
-			assertEquals(true, building.getFloorButtonUp(3));
-			
-			assertEquals(false, building.getFloorButtonDown(4));
-			assertEquals(false, building.getFloorButtonUp(4));
+			assertFalse(building.getFloorButtonDown(0));
+			assertFalse(building.getFloorButtonUp(0));
+
+			assertTrue(building.getFloorButtonDown(1));
+			assertFalse(building.getFloorButtonUp(1));
+
+			assertFalse(building.getFloorButtonDown(2));
+			assertTrue(building.getFloorButtonUp(2));
+
+			assertTrue(building.getFloorButtonDown(3));
+			assertTrue(building.getFloorButtonUp(3));
+
+			assertFalse(building.getFloorButtonDown(4));
+			assertFalse(building.getFloorButtonUp(4));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 			fail("Unexpected exception");
