@@ -6,8 +6,8 @@ public class MockBuilding implements IElevator {
 
     public MockElevator[] mElevators;
     public MockFloor[] mFloors;
-    private int mFloorHeight;
-    private int mClockTick = 15;
+    private final int mFloorHeight;
+    private final int mClockTick = 15;
 
     public MockBuilding(int nrOfElevators, int floors, int floorHeight) {
         mElevators = new MockElevator[nrOfElevators];
@@ -146,7 +146,7 @@ public class MockBuilding implements IElevator {
         return mClockTick;
     }
 
-    public class MockFloor {
+    public static class MockFloor {
         public boolean mFloorButtonUP = false;
         public boolean mFloorButtonDOWN = false;
     }
