@@ -400,6 +400,17 @@ public class IElevatorTest {
 			fail("Unexpected exception");
 		}
 	}
-	
+
+
+	@Test
+	public void testGetClockTick() {
+		MockBuilding building = new MockBuilding(1,5,10);
+		try {
+			assertEquals(15,building.getClockTick());
+		} catch(RemoteException e) {
+			e.printStackTrace();
+			fail("Unexpected exception");
+		}
+	}
 	
 }
