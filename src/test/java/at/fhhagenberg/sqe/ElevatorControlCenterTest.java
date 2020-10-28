@@ -109,6 +109,86 @@ public class ElevatorControlCenterTest {
         assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
         assertEquals(100, ecc.getBuilding().getElevator(0).getWeight());
     }
+    
+    @Test
+    public void testIsFloorButtonUpPressed() {
+    	mockBuilding.mFloors[0].mFloorButtonUP = true;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(true, ecc.getBuilding().getFloor(0).isButtonUpPressed());
+    }
+    
+    @Test
+    public void testIsFloorButtonDownPressed() {
+    	mockBuilding.mFloors[0].mFloorButtonDOWN = true;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(true, ecc.getBuilding().getFloor(0).isButtonDownPressed());
+    }
+    
+    @Test
+    public void testElevatorAddRemoveIsPressedButton() {
+    	ecc.getBuilding().getElevator(0).AddPressedButton(1);
+    	assertEquals(true, ecc.getBuilding().getElevator(0).IsPressedButton(1));
+    	ecc.getBuilding().getElevator(0).RemovePressedButton(1);
+    	assertEquals(false, ecc.getBuilding().getElevator(0).IsPressedButton(1));
+    }
+    
+    @Test
+    public void testRemoveIsServicedFloor() {
+    	ecc.getBuilding().getElevator(0).AddServicedFloor(ecc.getBuilding().getFloor(1));
+    	assertTrue(ecc.getBuilding().getElevator(0).IsServicedFloor(ecc.getBuilding().getFloor(1)));
+    	ecc.getBuilding().getElevator(0).RemoveServicedFloor(ecc.getBuilding().getFloor(1));
+    	assertFalse(ecc.getBuilding().getElevator(0).IsServicedFloor(ecc.getBuilding().getFloor(1)));
+    }
+    
+    @Test
+    public void testElevatorGetAcceleration() {
+    	mockBuilding.mElevators[0].mElevatorAccel = 8;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(8, ecc.getBuilding().getElevator(0).getAcceleration());
+    }
+    
+    @Test
+    public void testElevatorGetDirection() {
+    	mockBuilding.mElevators[0].mCommittedDirection = IElevator.ELEVATOR_DIRECTION_UP;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(IElevator.ELEVATOR_DIRECTION_UP, ecc.getBuilding().getElevator(0).getDirection());
+    }
+    
+    @Test
+    public void testElevatorGetDoorStatus() {
+    	mockBuilding.mElevators[0].mElevatorDoorStatus = IElevator.ELEVATOR_DOORS_OPEN;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(IElevator.ELEVATOR_DOORS_OPEN, ecc.getBuilding().getElevator(0).getDoorStatus());
+    }
+    
+    @Test
+    public void testElevatorGetCurrentFloor() {
+    	mockBuilding.mElevators[0].mElevatorFloor = 1;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(1, ecc.getBuilding().getElevator(0).getCurrentFloor());
+    }
+    
+    @Test
+    public void testElevatorGetPositionFeet() {
+    	mockBuilding.mElevators[0].mElevatorPosition = 14;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(14, ecc.getBuilding().getElevator(0).getPositionFeet());
+    }
+    
+    @Test
+    public void testElevatorGetSpeed() {
+    	mockBuilding.mElevators[0].mElevatorSpeed = 8;
+    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	
+        assertEquals(8, ecc.getBuilding().getElevator(0).getSpeed());
+    }
 
 
 }
