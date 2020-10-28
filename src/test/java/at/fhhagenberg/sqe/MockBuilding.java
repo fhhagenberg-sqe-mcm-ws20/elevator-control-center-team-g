@@ -7,7 +7,10 @@ public class MockBuilding implements IElevator {
     public MockElevator[] mElevators;
     public MockFloor[] mFloors;
     private final int mFloorHeight;
-    private final int mClockTick = 15;
+    private int mClockTick = 15;
+
+    private boolean clockTickShouldAdvance = false;
+    private boolean shouldThrowRemoteException = false;
 
     public MockBuilding(int nrOfElevators, int floors, int floorHeight) {
         mElevators = new MockElevator[nrOfElevators];
@@ -93,6 +96,7 @@ public class MockBuilding implements IElevator {
 
     @Override
     public int getFloorNum() throws RemoteException {
+        if(shouldThrowRemoteException) throw new RemoteException();
         return mFloors.length;
     }
 
@@ -127,7 +131,19 @@ public class MockBuilding implements IElevator {
 
     @Override
     public long getClockTick() throws RemoteException {
+        if(clockTickShouldAdvance) advanceTick();
         return mClockTick;
+    }
+
+    private void advanceTick() {
+        mClockTick++;
+    }
+
+    public void toggleClockTickShouldAdvance() {
+        clockTickShouldAdvance = !clockTickShouldAdvance;
+    }
+    public void toggleShouldThrowRemoteException() {
+        shouldThrowRemoteException = !shouldThrowRemoteException;
     }
 
     public static class MockFloor {

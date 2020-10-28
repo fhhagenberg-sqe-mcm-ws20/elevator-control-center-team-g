@@ -31,6 +31,13 @@ public class Building {
 		Floors = new ArrayList<Floor>(nrOfFloors);
 		Elevators = new ArrayList<Elevator>(nrOfElevators);
 		Floorheight = floorheight;
+
+		for(int i = 0; i < nrOfElevators; i++) {
+			Elevators.add(new Elevator());
+		}
+		for(int i = 0; i < nrOfFloors; i++) {
+			Floors.add(new Floor());
+		}
 	}
 
 	/**

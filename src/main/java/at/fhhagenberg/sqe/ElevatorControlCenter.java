@@ -17,6 +17,8 @@ public class ElevatorControlCenter {
 	// for getting data from actual elevator
 	private IElevator elevatorApi;
 
+
+
 	// Model that contains all the data
 	private Building building;
 
@@ -24,52 +26,6 @@ public class ElevatorControlCenter {
 	final int ReturnSuccess = 0;
 	final int ErrorRemoteException = -1;
 	final int ErrorTickChange = -2;
-
-	// init the ElevatorControlCenter
-	// this does not have to happen in the same clock tick because the number of
-	// floors and elevators is assumed to not change during runtime
-	/**
-	 * <p>init.</p>
-	 *
-	 * @param ElevatorSystem a {@link at.fhhagenberg.sqe.IElevator} object.
-	 * @return a int.
-	 */
-	public int init(IElevator ElevatorSystem) {
-		// get data from Elevator system and create model classes out of it
-		int nrOfFloors = 0;
-		int nrOfElevators = 0;
-		int Floorheight = 0;
-
-		try {
-			nrOfFloors = ElevatorSystem.getFloorNum();
-		} catch (RemoteException e) {
-			return ErrorRemoteException;
-		}
-
-		// create elevators
-		try {
-			nrOfElevators = ElevatorSystem.getElevatorNum();
-		} catch (RemoteException e) {
-			return ErrorRemoteException;
-		}
-
-		// get floor height
-		try {
-			Floorheight = ElevatorSystem.getFloorHeight();
-		} catch (RemoteException e) {
-			return ErrorRemoteException;
-		}
-
-		// create building
-		building = new Building(nrOfFloors, nrOfElevators, Floorheight);
-
-		// set floor numbers
-		for (int i = 0; i < building.getNrOfFloors(); i++) {
-			building.getFloor(i).setFloorNumber(i);
-		}
-
-		return ReturnSuccess;
-	}
 
 	/**
 	 * <p>update.</p>
@@ -99,6 +55,10 @@ public class ElevatorControlCenter {
 			}
 			// Elevators
 			for (int i = 0; i < newbuilding.getNrOfElevators(); i++) {
+				for(int j = 0; j < newbuilding.getNrOfFloors(); j++) {
+					if(ElevatorSystem.getServicesFloors(i,j)) newbuilding.getElevator(i).AddServicedFloor(newbuilding.getFloor(j));
+				}
+
 				newbuilding.getElevator(i).setDirection(ElevatorSystem.getCommittedDirection(i));
 				newbuilding.getElevator(i).setAcceleration(ElevatorSystem.getElevatorAccel(i));
 				newbuilding.getElevator(i).setDoorStatus(ElevatorSystem.getElevatorDoorStatus(i));
@@ -108,6 +68,8 @@ public class ElevatorControlCenter {
 				newbuilding.getElevator(i).setWeight(ElevatorSystem.getElevatorWeight(i));		
 				newbuilding.getElevator(i).setCapacity(ElevatorSystem.getElevatorCapacity(i));
 				newbuilding.getElevator(i).setTarget(ElevatorSystem.getTarget(i));
+
+
 			}
 
 			// Check if everything was refreshed in one tick
@@ -122,6 +84,10 @@ public class ElevatorControlCenter {
 			return ErrorRemoteException;
 		}
 
+	}
+
+	public Building getBuilding() {
+		return building;
 	}
 
 }

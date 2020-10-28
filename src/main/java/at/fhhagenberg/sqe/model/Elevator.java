@@ -85,6 +85,10 @@ public class Elevator {
 	public boolean IsServicedFloor(Floor fl) {
 		return ServicedFloors.contains(fl);
 	}
+
+	public boolean IsServicedFloor(int fl) {
+		return ServicedFloors.stream().anyMatch(floor -> floor.getFloorNumber() == fl);
+	}
 	
 	/**
 	 * <p>Getter for the field <code>direction</code>.</p>
@@ -242,7 +246,8 @@ public class Elevator {
 	 * @param target the target to set
 	 */
 	public void setTarget(int target) {
-		this.target = target;
+		if(IsServicedFloor(target)) this.target = target;
+		else throw new IllegalArgumentException("Target was not valid!");
 	}
 
 
