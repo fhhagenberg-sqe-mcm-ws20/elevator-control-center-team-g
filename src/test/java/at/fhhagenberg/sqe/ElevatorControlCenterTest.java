@@ -30,7 +30,7 @@ public class ElevatorControlCenterTest {
 
         try {
             for(int i = 0; i < NROFELEVATORS; i++) {
-                for(int j = 0; j < NROFFLOORS; j++) {
+                for(int j = 0; j < NROFFLOORS - 1; j++) {
                     mockBuilding.setServicesFloors(i,j,true);
                 }
             }
@@ -86,9 +86,9 @@ public class ElevatorControlCenterTest {
 
     @Test
     public void testElevatorTarget(){
-        mockBuilding.mElevators[0].mTarget = 4;
+        mockBuilding.mElevators[0].mTarget = 3;
         assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
-        assertEquals(4, ecc.getBuilding().getElevator(0).getTarget());
+        assertEquals(3, ecc.getBuilding().getElevator(0).getTarget());
     }
 
     @Test
