@@ -86,6 +86,11 @@ public class ElevatorControlCenter {
 
 	}
 
+	/**
+	 * <p>Getter for the field <code>building</code>.</p>
+	 *
+	 * @return a {@link at.fhhagenberg.sqe.model.Building} object.
+	 */
 	public Building getBuilding() {
 		return building;
 	}

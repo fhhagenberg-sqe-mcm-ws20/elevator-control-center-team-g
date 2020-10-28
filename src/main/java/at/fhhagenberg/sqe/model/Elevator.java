@@ -86,6 +86,12 @@ public class Elevator {
 		return ServicedFloors.contains(fl);
 	}
 
+	/**
+	 * <p>IsServicedFloor.</p>
+	 *
+	 * @param fl a int.
+	 * @return a boolean.
+	 */
 	public boolean IsServicedFloor(int fl) {
 		return ServicedFloors.stream().anyMatch(floor -> floor.getFloorNumber() == fl);
 	}
