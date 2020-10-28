@@ -5,6 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * <p>Elevator class.</p>
+ *
+ * @author Simon Bergmaier
+ * @version $Id: $Id
+ */
 public class Elevator {
 	
 	// Properties
@@ -25,6 +31,8 @@ public class Elevator {
 	private HashSet<Integer> PressedButtons = new HashSet<Integer>();
 	
 	/**
+	 * <p>AddPressedButton.</p>
+	 *
 	 * @param fl Nr of button that was pressed
 	 */
 	public void AddPressedButton(int fl) {
@@ -32,6 +40,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>RemovePressedButton.</p>
+	 *
 	 * @param fl Nr of button that was canceled
 	 */
 	public void RemovePressedButton(int fl) {
@@ -39,6 +49,8 @@ public class Elevator {
 	}
 	
 	/**
+	 * <p>IsPressedButton.</p>
+	 *
 	 * @param fl Nr of button to check for pressed status
 	 * @return true if Button was pressed
 	 */
@@ -47,6 +59,8 @@ public class Elevator {
 	}
 	
 	/**
+	 * <p>AddServicedFloor.</p>
+	 *
 	 * @param fl pointer to floor to add
 	 */
 	public void AddServicedFloor(Floor fl) {
@@ -54,6 +68,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>RemoveServicedFloor.</p>
+	 *
 	 * @param fl pointer to floor to remove
 	 */
 	public void RemoveServicedFloor(Floor fl) {
@@ -61,6 +77,8 @@ public class Elevator {
 	}
 	
 	/**
+	 * <p>IsServicedFloor.</p>
+	 *
 	 * @param fl pointer to floor to check if its being serviced by this elevator
 	 * @return true if the elevator services this floor
 	 */
@@ -69,24 +87,32 @@ public class Elevator {
 	}
 	
 	/**
+	 * <p>Getter for the field <code>direction</code>.</p>
+	 *
 	 * @return the direction
 	 */
 	public int getDirection() {
 		return direction;
 	}
 	/**
+	 * <p>Setter for the field <code>direction</code>.</p>
+	 *
 	 * @param direction the direction to set
 	 */
 	public void setDirection(int direction) {
 		this.direction = direction;
 	}
 	/**
+	 * <p>Getter for the field <code>acceleration</code>.</p>
+	 *
 	 * @return the acceleration
 	 */
 	public int getAcceleration() {
 		return acceleration;
 	}
 	/**
+	 * <p>Setter for the field <code>acceleration</code>.</p>
+	 *
 	 * @param acceleration the acceleration to set
 	 */
 	public void setAcceleration(int acceleration) {
@@ -94,6 +120,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Getter for the field <code>doorStatus</code>.</p>
+	 *
 	 * @return the doorStatus
 	 */
 	public int getDoorStatus() {
@@ -101,6 +129,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Setter for the field <code>doorStatus</code>.</p>
+	 *
 	 * @param doorStatus the doorStatus to set
 	 */
 	public void setDoorStatus(int doorStatus) {
@@ -108,6 +138,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Getter for the field <code>currentFloor</code>.</p>
+	 *
 	 * @return the currentFloor
 	 */
 	public int getCurrentFloor() {
@@ -115,6 +147,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Setter for the field <code>currentFloor</code>.</p>
+	 *
 	 * @param currentFloor the currentFloor to set
 	 */
 	public void setCurrentFloor(int currentFloor) {
@@ -122,6 +156,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Getter for the field <code>positionFeet</code>.</p>
+	 *
 	 * @return the positionFeet
 	 */
 	public int getPositionFeet() {
@@ -129,6 +165,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Setter for the field <code>positionFeet</code>.</p>
+	 *
 	 * @param positionFeet the positionFeet to set
 	 */
 	public void setPositionFeet(int positionFeet) {
@@ -136,6 +174,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Getter for the field <code>speed</code>.</p>
+	 *
 	 * @return the speed
 	 */
 	public int getSpeed() {
@@ -143,6 +183,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Setter for the field <code>speed</code>.</p>
+	 *
 	 * @param speed the speed to set
 	 */
 	public void setSpeed(int speed) {
@@ -150,6 +192,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Getter for the field <code>weight</code>.</p>
+	 *
 	 * @return the weight
 	 */
 	public int getWeight() {
@@ -157,6 +201,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Setter for the field <code>weight</code>.</p>
+	 *
 	 * @param weight the weight to set
 	 */
 	public void setWeight(int weight) {
@@ -164,6 +210,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Getter for the field <code>capacity</code>.</p>
+	 *
 	 * @return the capacity
 	 */
 	public int getCapacity() {
@@ -171,6 +219,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Setter for the field <code>capacity</code>.</p>
+	 *
 	 * @param capacity the capacity to set
 	 */
 	public void setCapacity(int capacity) {
@@ -178,6 +228,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Getter for the field <code>target</code>.</p>
+	 *
 	 * @return the target
 	 */
 	public int getTarget() {
@@ -185,6 +237,8 @@ public class Elevator {
 	}
 
 	/**
+	 * <p>Setter for the field <code>target</code>.</p>
+	 *
 	 * @param target the target to set
 	 */
 	public void setTarget(int target) {

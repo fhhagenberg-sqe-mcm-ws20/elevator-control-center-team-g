@@ -3,6 +3,12 @@ package at.fhhagenberg.sqe.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>Building class.</p>
+ *
+ * @author Simon Bergmaier
+ * @version $Id: $Id
+ */
 public class Building {
 
 	// Floors
@@ -14,6 +20,13 @@ public class Building {
 	// stored data that is the same for all floors/elevators
 	private int Floorheight = 0;
 
+	/**
+	 * <p>Constructor for Building.</p>
+	 *
+	 * @param nrOfFloors a int.
+	 * @param nrOfElevators a int.
+	 * @param floorheight a int.
+	 */
 	public Building(int nrOfFloors, int nrOfElevators, int floorheight) {
 		Floors = new ArrayList<Floor>(nrOfFloors);
 		Elevators = new ArrayList<Elevator>(nrOfElevators);
@@ -21,6 +34,8 @@ public class Building {
 	}
 
 	/**
+	 * <p>getFloorheight.</p>
+	 *
 	 * @return the floorheight
 	 */
 	public int getFloorheight() {
@@ -28,6 +43,8 @@ public class Building {
 	}
 	
 	/**
+	 * <p>getFloor.</p>
+	 *
 	 * @param num of Floor you want to get
 	 * @return Floor you want to get
 	 */
@@ -36,6 +53,8 @@ public class Building {
 	}
 
 	/**
+	 * <p>getElevator.</p>
+	 *
 	 * @param num of elevator you want to get
 	 * @return elevator you want to get
 	 */
@@ -44,6 +63,8 @@ public class Building {
 	}
 	
 	/**
+	 * <p>getNrOfFloors.</p>
+	 *
 	 * @return number of floors
 	 */
 	public int getNrOfFloors() {
@@ -51,6 +72,8 @@ public class Building {
 	}
 	
 	/**
+	 * <p>getNrOfElevators.</p>
+	 *
 	 * @return number of Elevators
 	 */
 	public int getNrOfElevators() {

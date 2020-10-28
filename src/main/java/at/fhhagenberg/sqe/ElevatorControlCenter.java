@@ -6,6 +6,12 @@ import java.util.List;
 
 import at.fhhagenberg.sqe.model.*;
 
+/**
+ * <p>ElevatorControlCenter class.</p>
+ *
+ * @author Simon Bergmaier
+ * @version $Id: $Id
+ */
 public class ElevatorControlCenter {
 
 	// for getting data from actual elevator
@@ -22,6 +28,12 @@ public class ElevatorControlCenter {
 	// init the ElevatorControlCenter
 	// this does not have to happen in the same clock tick because the number of
 	// floors and elevators is assumed to not change during runtime
+	/**
+	 * <p>init.</p>
+	 *
+	 * @param ElevatorSystem a {@link at.fhhagenberg.sqe.IElevator} object.
+	 * @return a int.
+	 */
 	public int init(IElevator ElevatorSystem) {
 		// get data from Elevator system and create model classes out of it
 		int nrOfFloors = 0;
@@ -60,8 +72,10 @@ public class ElevatorControlCenter {
 	}
 
 	/**
-	 * @param ElevatorSystem
-	 * @return
+	 * <p>update.</p>
+	 *
+	 * @param ElevatorSystem a {@link at.fhhagenberg.sqe.IElevator} object.
+	 * @return a int.
 	 */
 	public int update(IElevator ElevatorSystem) {
 		try {

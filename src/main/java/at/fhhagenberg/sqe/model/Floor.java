@@ -1,5 +1,11 @@
 package at.fhhagenberg.sqe.model;
 
+/**
+ * <p>Floor class.</p>
+ *
+ * @author Simon Bergmaier
+ * @version $Id: $Id
+ */
 public class Floor {
 	
 	private boolean isButtonDownPressed = false;
@@ -8,36 +14,48 @@ public class Floor {
 	
 	
 	/**
+	 * <p>isButtonDownPressed.</p>
+	 *
 	 * @return the isButtonDownPressed
 	 */
 	public boolean isButtonDownPressed() {
 		return isButtonDownPressed;
 	}
 	/**
-	 * @param isButtonDownPressed the isButtonDownPressed to set
+	 * <p>setButtonDownPressed.</p>
+	 *
+	 * @param ButtonStatus a boolean.
 	 */
 	public void setButtonDownPressed(boolean ButtonStatus) {
 		this.isButtonDownPressed = ButtonStatus;
 	}
 	/**
+	 * <p>isButtonUpPressed.</p>
+	 *
 	 * @return the isButtonUpPressed
 	 */
 	public boolean isButtonUpPressed() {
 		return isButtonUpPressed;
 	}
 	/**
-	 * @param isButtonUpPressed the isButtonUpPressed to set
+	 * <p>setButtonUpPressed.</p>
+	 *
+	 * @param ButtonStatus a boolean.
 	 */
 	public void setButtonUpPressed(boolean ButtonStatus) {
 		this.isButtonUpPressed = ButtonStatus;
 	}
 	/**
+	 * <p>getFloorNumber.</p>
+	 *
 	 * @return the floorNumber
 	 */
 	public int getFloorNumber() {
 		return FloorNumber;
 	}
 	/**
+	 * <p>setFloorNumber.</p>
+	 *
 	 * @param floorNumber the floorNumber to set
 	 */
 	public void setFloorNumber(int floorNumber) {
