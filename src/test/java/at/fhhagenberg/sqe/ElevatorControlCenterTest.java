@@ -1,7 +1,6 @@
 package at.fhhagenberg.sqe;
 
 import at.fhhagenberg.sqe.model.Floor;
-import org.assertj.core.internal.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -94,9 +93,7 @@ public class ElevatorControlCenterTest {
     @Test
     public void testInvalidElevatorTarget() {
         mockBuilding.mElevators[0].mTarget = 10;
-        Exception exception  = assertThrows(IllegalArgumentException.class, () -> {
-            ecc.update(mockBuilding);
-        });
+        Exception exception  = assertThrows(IllegalArgumentException.class, () -> ecc.update(mockBuilding));
 
         String expectedMessage = "Target was not valid!";
         assertEquals(expectedMessage, exception.getMessage());
@@ -114,24 +111,24 @@ public class ElevatorControlCenterTest {
     public void testIsFloorButtonUpPressed() {
     	mockBuilding.mFloors[0].mFloorButtonUP = true;
     	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
-    	
-        assertEquals(true, ecc.getBuilding().getFloor(0).isButtonUpPressed());
+
+        assertTrue(ecc.getBuilding().getFloor(0).isButtonUpPressed());
     }
     
     @Test
     public void testIsFloorButtonDownPressed() {
     	mockBuilding.mFloors[0].mFloorButtonDOWN = true;
     	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
-    	
-        assertEquals(true, ecc.getBuilding().getFloor(0).isButtonDownPressed());
+
+        assertTrue(ecc.getBuilding().getFloor(0).isButtonDownPressed());
     }
     
     @Test
     public void testElevatorAddRemoveIsPressedButton() {
     	ecc.getBuilding().getElevator(0).AddPressedButton(1);
-    	assertEquals(true, ecc.getBuilding().getElevator(0).IsPressedButton(1));
+        assertTrue(ecc.getBuilding().getElevator(0).IsPressedButton(1));
     	ecc.getBuilding().getElevator(0).RemovePressedButton(1);
-    	assertEquals(false, ecc.getBuilding().getElevator(0).IsPressedButton(1));
+        assertFalse(ecc.getBuilding().getElevator(0).IsPressedButton(1));
     }
     
     @Test
