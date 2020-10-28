@@ -1,5 +1,9 @@
 # Graphical User Interface with JavaFx
 
+[![JavaCI with Maven Actions Status]
+(https://github.com/fhhagenberg-sqe-mcm-ws20/elevator-control-center-team-g/workflows/Java CI with Maven/badge.svg)]
+(https://github.com/fhhagenberg-sqe-mcm-ws20/elevator-control-center-team-g/actions)
+
 ### Prerequisites
 
 - [x] Java 13 SDK (e.g. Oracle or OpenJDK).
