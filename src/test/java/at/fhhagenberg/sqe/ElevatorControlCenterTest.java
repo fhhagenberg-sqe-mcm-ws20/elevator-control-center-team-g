@@ -4,6 +4,7 @@ import at.fhhagenberg.sqe.model.Floor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sqelevator.IElevator;
 
 import java.rmi.RemoteException;
 
@@ -11,35 +12,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ElevatorControlCenterTest {
 
-    private final int NROFELEVATORS = 5;
-    private final int NROFFLOORS = 5;
-    private final int FLOORHEIGHT = 500;
-    private final int RETURNSUCCESS = 0;
-    private final int ERRORREMOTEEXCEPTION = -1;
-    private final int ERRORTICKCHANGE = -2;
 
     ElevatorControlCenter ecc;
     MockBuilding mockBuilding;
 
     @BeforeEach
-    private void setUp() {
+    private void setUp() throws Exception{
         ecc = new ElevatorControlCenter();
 
-        mockBuilding = new MockBuilding(NROFELEVATORS,NROFFLOORS,FLOORHEIGHT);
+        mockBuilding = new MockBuilding(3,3,500);
 
-        try {
-            for(int i = 0; i < NROFELEVATORS; i++) {
-                for(int j = 0; j < NROFFLOORS - 1; j++) {
-                    mockBuilding.setServicesFloors(i,j,true);
-                }
-            }
-        } catch(RemoteException re) {
-            re.printStackTrace();
-        }
+        mockBuilding.setServicesFloors(0,0,true);
+        mockBuilding.setServicesFloors(0,1,true);
+        mockBuilding.setServicesFloors(0,2,true);
+        mockBuilding.setServicesFloors(1,0,true);
+        mockBuilding.setServicesFloors(1,1,true);
+        mockBuilding.setServicesFloors(1,2,true);
+        mockBuilding.setServicesFloors(2,0,true);
+        mockBuilding.setServicesFloors(2,1,true);
+        //for CodeCoverage
+        mockBuilding.setServicesFloors(2,2,false);
 
-
-
-        assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+        ecc.update(mockBuilding);
     }
 
     @AfterEach
@@ -49,45 +43,37 @@ public class ElevatorControlCenterTest {
 
     @Test
     public void testInit(){
-        assertEquals(NROFELEVATORS, ecc.getBuilding().getNrOfElevators());
-        assertEquals(NROFFLOORS, ecc.getBuilding().getNrOfFloors());
-        assertEquals(FLOORHEIGHT, ecc.getBuilding().getFloorheight());
+        assertEquals(3, ecc.getBuilding().getNrOfElevators());
+        assertEquals(3, ecc.getBuilding().getNrOfFloors());
+        assertEquals(500, ecc.getBuilding().getFloorheight());
     }
 
     @Test
     public void testInitFloorNumbers(){
-        for (int i = 0; i < ecc.getBuilding().getNrOfFloors(); i++) {
-            Floor fl = ecc.getBuilding().getFloor(i);
-            assertEquals(i,fl.getFloorNumber());
-        }
+
+        Floor fl1 = ecc.getBuilding().getFloor(0);
+        assertEquals(0,fl1.getFloorNumber());
+        Floor fl2 = ecc.getBuilding().getFloor(1);
+        assertEquals(1,fl2.getFloorNumber());
+        Floor fl3 = ecc.getBuilding().getFloor(2);
+        assertEquals(2,fl3.getFloorNumber());
+
     }
 
-    @Test
-    public void testClockTickChange() {
-        mockBuilding.toggleClockTickShouldAdvance();
-        assertEquals(ERRORTICKCHANGE, ecc.update(mockBuilding));
-        mockBuilding.toggleClockTickShouldAdvance();
-    }
+
 
     @Test
-    public void testRemoteException() {
-        mockBuilding.toggleShouldThrowRemoteException();
-        assertEquals(ERRORREMOTEEXCEPTION, ecc.update(mockBuilding));
-        mockBuilding.toggleShouldThrowRemoteException();
-    }
-
-    @Test
-    public void testElevatorCapacity(){
+    public void testElevatorCapacity() throws RemoteException, ClockTickChangeException {
         mockBuilding.mElevators[0].mElevatorCapacity = 10;
-        assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+        ecc.update(mockBuilding);
         assertEquals(10, ecc.getBuilding().getElevator(0).getCapacity());
     }
 
     @Test
-    public void testElevatorTarget(){
-        mockBuilding.mElevators[0].mTarget = 3;
-        assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
-        assertEquals(3, ecc.getBuilding().getElevator(0).getTarget());
+    public void testElevatorTarget() throws RemoteException, ClockTickChangeException {
+        mockBuilding.mElevators[0].mTarget = 2;
+       ecc.update(mockBuilding);
+        assertEquals(2, ecc.getBuilding().getElevator(0).getTarget());
     }
 
     @Test
@@ -101,24 +87,24 @@ public class ElevatorControlCenterTest {
 
 
     @Test
-    public void testElevatorWeight() {
+    public void testElevatorWeight() throws RemoteException, ClockTickChangeException {
         mockBuilding.mElevators[0].mElevatorWeight = 100;
-        assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+       ecc.update(mockBuilding);
         assertEquals(100, ecc.getBuilding().getElevator(0).getWeight());
     }
     
     @Test
-    public void testIsFloorButtonUpPressed() {
+    public void testIsFloorButtonUpPressed() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mFloors[0].mFloorButtonUP = true;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
 
         assertTrue(ecc.getBuilding().getFloor(0).isButtonUpPressed());
     }
     
     @Test
-    public void testIsFloorButtonDownPressed() {
+    public void testIsFloorButtonDownPressed() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mFloors[0].mFloorButtonDOWN = true;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
 
         assertTrue(ecc.getBuilding().getFloor(0).isButtonDownPressed());
     }
@@ -140,49 +126,49 @@ public class ElevatorControlCenterTest {
     }
     
     @Test
-    public void testElevatorGetAcceleration() {
+    public void testElevatorGetAcceleration() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mElevators[0].mElevatorAccel = 8;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
     	
         assertEquals(8, ecc.getBuilding().getElevator(0).getAcceleration());
     }
     
     @Test
-    public void testElevatorGetDirection() {
+    public void testElevatorGetDirection() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mElevators[0].mCommittedDirection = IElevator.ELEVATOR_DIRECTION_UP;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
     	
         assertEquals(IElevator.ELEVATOR_DIRECTION_UP, ecc.getBuilding().getElevator(0).getDirection());
     }
     
     @Test
-    public void testElevatorGetDoorStatus() {
+    public void testElevatorGetDoorStatus() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mElevators[0].mElevatorDoorStatus = IElevator.ELEVATOR_DOORS_OPEN;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
     	
         assertEquals(IElevator.ELEVATOR_DOORS_OPEN, ecc.getBuilding().getElevator(0).getDoorStatus());
     }
     
     @Test
-    public void testElevatorGetCurrentFloor() {
+    public void testElevatorGetCurrentFloor() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mElevators[0].mElevatorFloor = 1;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
     	
         assertEquals(1, ecc.getBuilding().getElevator(0).getCurrentFloor());
     }
     
     @Test
-    public void testElevatorGetPositionFeet() {
+    public void testElevatorGetPositionFeet() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mElevators[0].mElevatorPosition = 14;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
     	
         assertEquals(14, ecc.getBuilding().getElevator(0).getPositionFeet());
     }
     
     @Test
-    public void testElevatorGetSpeed() {
+    public void testElevatorGetSpeed() throws RemoteException, ClockTickChangeException {
     	mockBuilding.mElevators[0].mElevatorSpeed = 8;
-    	assertEquals(RETURNSUCCESS, ecc.update(mockBuilding));
+    	ecc.update(mockBuilding);
     	
         assertEquals(8, ecc.getBuilding().getElevator(0).getSpeed());
     }
