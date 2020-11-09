@@ -1,5 +1,8 @@
 package at.fhhagenberg.sqe;
 
+import sqelevator.IElevator;
+
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public class MockBuilding implements IElevator {
@@ -9,7 +12,7 @@ public class MockBuilding implements IElevator {
     private final int mFloorHeight;
     private int mClockTick = 15;
 
-    private boolean clockTickShouldAdvance = false;
+
     private boolean shouldThrowRemoteException = false;
 
     public MockBuilding(int nrOfElevators, int floors, int floorHeight) {
@@ -131,20 +134,9 @@ public class MockBuilding implements IElevator {
 
     @Override
     public long getClockTick() throws RemoteException {
-        if(clockTickShouldAdvance) advanceTick();
         return mClockTick;
     }
 
-    private void advanceTick() {
-        mClockTick++;
-    }
-
-    public void toggleClockTickShouldAdvance() {
-        clockTickShouldAdvance = !clockTickShouldAdvance;
-    }
-    public void toggleShouldThrowRemoteException() {
-        shouldThrowRemoteException = !shouldThrowRemoteException;
-    }
 
     public static class MockFloor {
         public boolean mFloorButtonUP = false;
@@ -170,3 +162,4 @@ public class MockBuilding implements IElevator {
         }
     }
 }
+
