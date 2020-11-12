@@ -17,8 +17,6 @@ public class ElevatorControlCenter {
 	// for getting data from actual elevator
 	private IElevator elevatorApi;
 
-
-
 	// Model that contains all the data
 	private Building building;
 
@@ -27,8 +25,8 @@ public class ElevatorControlCenter {
 	 * <p>update.</p>
 	 *
 	 * @param ElevatorSystem a {@link sqelevator.IElevator} object.
+	 * @throws at.fhhagenberg.sqe.util.ClockTickChangeException if any.
 	 * @throws java.rmi.RemoteException if any.
-	 * @throws ClockTickChangeException if any.
 	 */
 	public void update(IElevator ElevatorSystem) throws RemoteException, ClockTickChangeException {
 		long currentTick = ElevatorSystem.getClockTick();
