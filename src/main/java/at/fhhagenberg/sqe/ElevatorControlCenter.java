@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqe;
 
 import at.fhhagenberg.sqe.model.Building;
+import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import sqelevator.IElevator;
 
 import java.rmi.RemoteException;
@@ -27,7 +28,7 @@ public class ElevatorControlCenter {
 	 *
 	 * @param ElevatorSystem a {@link sqelevator.IElevator} object.
 	 * @throws java.rmi.RemoteException if any.
-	 * @throws at.fhhagenberg.sqe.ClockTickChangeException if any.
+	 * @throws ClockTickChangeException if any.
 	 */
 	public void update(IElevator ElevatorSystem) throws RemoteException, ClockTickChangeException {
 		long currentTick = ElevatorSystem.getClockTick();
