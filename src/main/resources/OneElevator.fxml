@@ -22,7 +22,7 @@
 
 <VBox maxWidth="215.0" minWidth="215.0" prefHeight="643.0" prefWidth="215.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label prefHeight="30.0" prefWidth="188.0" text="Elevator 1" textAlignment="CENTER">
+      <Label prefHeight="30.0" prefWidth="188.0" text="New Elevator" textAlignment="CENTER">
          <font>
             <Font size="20.0" />
          </font>
@@ -31,7 +31,7 @@
         <content>
           <!-- <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="396.0" prefWidth="200.0"> 
                <children> -->
-                  <GridPane id="GridpaneElevator1" alignment="BOTTOM_LEFT" gridLinesVisible="true" layoutY="8.0" maxHeight="2000.0" maxWidth="200.0" prefHeight="579.0" prefWidth="200.0">
+                  <GridPane id="GridpaneElevatorNew" alignment="BOTTOM_LEFT" gridLinesVisible="true" layoutY="8.0" maxHeight="2000.0" maxWidth="200.0" prefHeight="579.0" prefWidth="200.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="100.0" />

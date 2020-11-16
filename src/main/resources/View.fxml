@@ -77,7 +77,7 @@
         </AnchorPane>
         <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
           <content>
-            <HBox id="Elevators" minHeight="-1.0" minWidth="-1.0" prefHeight="643.0" prefWidth="830.0">
+            <HBox id="Elevators" minHeight="-1.0" minWidth="-1.0" prefHeight="628.0" prefWidth="830.0">
               <children>
                 <!-- <fx:include source="OneElevator.fxml"/> -->
               </children>
