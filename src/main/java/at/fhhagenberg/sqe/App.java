@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,12 +30,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * <p>App class.</p>
  *
@@ -44,6 +39,7 @@ import java.util.stream.Collectors;
 public class App extends Application {
 
     private Scene scene = null;
+    private TextArea console = null;
 
     /** {@inheritDoc} */
     @Override
@@ -56,11 +52,12 @@ public class App extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        console = (TextArea) scene.lookup("#txtConsole");
         
         AddElevator(1);
         AddElevator(2);
         AddElevator(3);
-
     }
     
     private void AddElevator(int amountFloors) throws Exception {
@@ -85,17 +82,25 @@ public class App extends Application {
         tb.setId("ToggleButtonElevator"+Elevatornum);
         tb.setText("Automatic");
 
-        tb.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue) tb.setText("Manual");
-                else tb.setText("Automatic");
-            }
-        });
+
 
         ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevatorNew");
         cb.setId("ChoiceBoxElevator"+Elevatornum);
+        cb.setDisable(true);
 
+        tb.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue) {
+                    tb.setText("Manual");
+                    writeToConsole("Set Elevator " + Elevatornum + " to Manual Mode");
+                }  else {
+                    tb.setText("Automatic");
+                    writeToConsole("Set Elevator " + Elevatornum + " to Automatic Mode");
+                }
+                cb.setDisable(!newValue);
+            }
+        });
 
         // set size of grid elems
         gp.getColumnConstraints().get(0).setMinWidth(100);
@@ -128,6 +133,17 @@ public class App extends Application {
         setElevatorFloor(Elevatornum,0, false);
     }
 
+    private void setTargetFloor(int elevatornum, int floornum) {
+        GridPane gp = (GridPane) scene.lookup("#GridpaneElevator"+elevatornum);
+        for(Node floor: gp.getChildren()) {
+            if(GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 1) {
+                ((Circle)((StackPane) floor).getChildren().get(0)).setFill(Paint.valueOf(("WHITE")));
+            }
+        }
+        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum+1));
+        circle.setFill(Paint.valueOf("#ff8c00"));
+    }
+
     private void setElevatorFloor(int elevatornum, int floornum, boolean open) throws Exception {
         GridPane gp = (GridPane) scene.lookup("#GridpaneElevator"+elevatornum);
 
@@ -135,22 +151,25 @@ public class App extends Application {
             throw new Exception("Floor doesn't exist!");
         }
 
-        floornum = gp.getRowCount() - floornum - 1;
-
-
-        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum+1));
-        circle.setFill(Paint.valueOf("#ff8c00"));
-
         for (Node floor:gp.getChildren()) {
             if(GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 0) {
                 ((ImageView) floor).setImage(null);
             }
         }
 
+
+        writeToConsole("Elevator " + elevatornum + " moved to floor " + (floornum+1));
+
+        floornum = gp.getRowCount() - floornum - 1;
+
         ImageView imageView = new ImageView();
         if(open)  imageView.setImage(new Image("/ElevatorOpen.png"));
         else imageView.setImage(new Image("/ElevatorClosed.png"));
         gp.add(imageView,0,floornum);
+    }
+
+    private void writeToConsole(String text) {
+        console.setText(console.getText() + System.lineSeparator() + text);
     }
 
     private void AddFloorNumber(int elevatornum, int rownr, int floornum) {

@@ -6,7 +6,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="900.0" maxWidth="1080.0" minHeight="900.0" minWidth="1080.0" prefHeight="900.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="900.0" maxWidth="1080.0" minHeight="900.0" minWidth="1080.0" prefHeight="900.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhhagenberg.sqe.view.View">
   <SplitPane dividerPositions="0.17346938775510204" focusTraversable="true" VBox.vgrow="ALWAYS">
     <AnchorPane>
       <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" style="&#10;" text="Master" textAlignment="CENTER">
@@ -27,5 +27,5 @@
       </HBox>
     </ScrollPane>
   </SplitPane>
-  <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE&#10;CONSOLE CONSOLE CONSOLE CONSOLE CONSOLE" />
+  <TextArea id="txtConsole" editable="false" prefHeight="200.0" prefWidth="200.0"/>
 </VBox>
