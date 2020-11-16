@@ -25,8 +25,8 @@ public class ElevatorControlCenter {
 	 * <p>update.</p>
 	 *
 	 * @param ElevatorSystem a {@link sqelevator.IElevator} object.
-	 * @throws at.fhhagenberg.sqe.util.ClockTickChangeException if any.
 	 * @throws java.rmi.RemoteException if any.
+	 * @throws at.fhhagenberg.sqe.util.ClockTickChangeException if any.
 	 */
 	public void update(IElevator ElevatorSystem) throws RemoteException, ClockTickChangeException {
 		long currentTick = ElevatorSystem.getClockTick();
