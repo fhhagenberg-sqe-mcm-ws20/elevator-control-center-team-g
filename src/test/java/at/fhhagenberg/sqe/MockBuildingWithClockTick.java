@@ -11,7 +11,7 @@ public class MockBuildingWithClockTick extends MockBuilding {
     }
 
     @Override
-    public long getClockTick() throws RemoteException {
+    public long getClockTick() throws RemoteException{
         return mClockTick++;
     }
 }
