@@ -137,8 +137,9 @@ public class App extends Application {
 
         floornum = gp.getRowCount() - floornum - 1;
 
-        //Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum +"-" + floornum+1);
-        //circle.setFill(Paint.valueOf("#ff8c00"));
+
+        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum+1));
+        circle.setFill(Paint.valueOf("#ff8c00"));
 
         for (Node floor:gp.getChildren()) {
             if(GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 0) {
@@ -158,7 +159,7 @@ public class App extends Application {
         GridPane gp = (GridPane) scene.lookup("#GridpaneElevator"+elevatornum);
 
     	Circle c1 = new Circle(40);
-    	c1.setId("Indicator"+ elevatornum +"-" + floornum);
+    	c1.setId("Indicator"+ elevatornum + "-" + floornum);
         c1.setFill(Paint.valueOf("WHITE"));
         c1.setStrokeWidth(5);
         c1.setStroke(Paint.valueOf("BLACK"));
