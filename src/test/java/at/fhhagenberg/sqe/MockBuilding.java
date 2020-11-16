@@ -2,7 +2,6 @@ package at.fhhagenberg.sqe;
 
 import sqelevator.IElevator;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public class MockBuilding implements IElevator {
@@ -10,10 +9,8 @@ public class MockBuilding implements IElevator {
     public MockElevator[] mElevators;
     public MockFloor[] mFloors;
     private final int mFloorHeight;
-    private int mClockTick = 15;
 
-
-    private boolean shouldThrowRemoteException = false;
+    private final long mClockTick = 15;
 
     public MockBuilding(int nrOfElevators, int floors, int floorHeight) {
         mElevators = new MockElevator[nrOfElevators];
@@ -99,7 +96,6 @@ public class MockBuilding implements IElevator {
 
     @Override
     public int getFloorNum() throws RemoteException {
-        if(shouldThrowRemoteException) throw new RemoteException();
         return mFloors.length;
     }
 
@@ -143,7 +139,7 @@ public class MockBuilding implements IElevator {
         public boolean mFloorButtonDOWN = false;
     }
 
-    public class MockElevator {
+    public static class MockElevator {
         public int mCommittedDirection = ELEVATOR_DIRECTION_UP;
         public int mElevatorAccel = 0;
         public int mElevatorDoorStatus = ELEVATOR_DOORS_CLOSED;
