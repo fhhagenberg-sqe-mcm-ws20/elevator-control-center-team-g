@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -59,8 +58,8 @@ public class App extends Application {
         AddElevator(3);
 
         setElevatorFloor(3,1,true);
-        setTargetFloor(2,2);
-        setTargetFloor(1,1);
+        setTargetFloor(2,1);
+        setTargetFloor(1,0);
     }
     
     private void AddElevator(int amountFloors) throws Exception {
@@ -125,11 +124,13 @@ public class App extends Application {
         cb.setOnAction(event -> {
             @SuppressWarnings("unchecked")
             ChoiceBox<Integer> cb1 = (ChoiceBox<Integer>) event.getSource();
-            int selected = cb1.getValue() - 1;
-            try {
-                setElevatorFloor(elevatornum,selected,false);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(!cb1.isDisabled()) {
+                int selected = cb1.getValue() - 1;
+                try {
+                    setElevatorFloor(elevatornum, selected, false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         setElevatorFloor(elevatornum,0, false);
@@ -142,7 +143,7 @@ public class App extends Application {
                 ((Circle)((StackPane) floor).getChildren().get(0)).setFill(Paint.valueOf(("WHITE")));
             }
         }
-        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum));
+        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum+1));
         circle.setFill(Paint.valueOf("#ff8c00"));
     }
 
@@ -159,15 +160,17 @@ public class App extends Application {
             }
         }
 
-
         writeToConsole("Elevator " + elevatornum + " moved to floor " + (floornum+1));
 
-        floornum = gp.getRowCount() - floornum - 1;
 
         ImageView imageView = new ImageView();
         if(open)  imageView.setImage(new Image("/ElevatorOpen.png"));
         else imageView.setImage(new Image("/ElevatorClosed.png"));
-        gp.add(imageView,0,floornum);
+        gp.add(imageView,0,(gp.getRowCount() - floornum - 1));
+
+        @SuppressWarnings("unchecked")
+        ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevator"+elevatornum);
+        if(cb.isDisabled()) cb.setValue(floornum+1);
         
         // Align Elevator icon to center of grid
         GridPane.setHalignment(imageView, HPos.CENTER);
