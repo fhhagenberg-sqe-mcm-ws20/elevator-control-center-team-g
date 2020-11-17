@@ -11,65 +11,11 @@ import java.util.List;
  */
 public class Building {
 
-	/**
-	 * <p>getFloors.</p>
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	public List<Floor> getFloors() {
-		return mFloors;
-	}
-
-	/**
-	 * <p>setFloors.</p>
-	 *
-	 * @param floors a {@link java.util.List} object.
-	 */
-	public void setFloors(List<Floor> floors) {
-		this.mFloors = floors;
-	}
-
-	/**
-	 * <p>addFloor.</p>
-	 *
-	 * @param floor a {@link at.fhhagenberg.sqe.model.Floor} object.
-	 */
-	public void addFloor(Floor floor) {
-		this.mFloors.add(floor);
-	}
-
-	/**
-	 * <p>getElevators.</p>
-	 *
-	 * @return a {@link java.util.List} object.
-	 */
-	public List<Elevator> getElevators() {
-		return mElevators;
-	}
-
-	/**
-	 * <p>setElevators.</p>
-	 *
-	 * @param elevators a {@link java.util.List} object.
-	 */
-	public void setElevators(List<Elevator> elevators) {
-		this.mElevators = elevators;
-	}
-
-	/**
-	 * <p>addElevators.</p>
-	 *
-	 * @param elevator a {@link at.fhhagenberg.sqe.model.Elevator} object.
-	 */
-	public void addElevators(Elevator elevator) {
-		this.mElevators.add(elevator);
-	}
-
 	// Floors
-	private List<Floor> mFloors;
+	private final List<Floor> mFloors;
 
 	// Elevators
-	private List<Elevator> mElevators;
+	private final List<Elevator> mElevators;
 
 	// stored data that is the same for all floors/elevators
 	private final int mFloorheight;

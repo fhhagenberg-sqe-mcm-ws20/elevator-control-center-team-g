@@ -2,7 +2,6 @@ package at.fhhagenberg.sqe;
 
 import org.junit.jupiter.api.Test;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

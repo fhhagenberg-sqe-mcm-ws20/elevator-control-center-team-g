@@ -3,15 +3,13 @@ package at.fhhagenberg.sqe;
 import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import org.junit.jupiter.api.Test;
 
-import java.rmi.RemoteException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ElevatorControlCenterClockTickTest {
 
     @Test
-    public void testClockTickChange() throws RemoteException {
+    public void testClockTickChange() {
         ElevatorControlCenter ecc = new ElevatorControlCenter();
 
         MockBuildingWithClockTick mockBuilding = new MockBuildingWithClockTick(3,3,500);

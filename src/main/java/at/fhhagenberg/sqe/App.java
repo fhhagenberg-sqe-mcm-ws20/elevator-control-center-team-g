@@ -37,6 +37,8 @@ public class App extends Application {
     private Scene scene = null;
     private TextArea console = null;
 
+    private final ElevatorControlCenter ecc = new ElevatorControlCenter();
+
     /** {@inheritDoc} */
     @Override
     public void start(Stage primaryStage) throws Exception {
