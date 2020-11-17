@@ -46,14 +46,12 @@ public class App extends Application {
 	private TextArea console = null;
 
 	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
-<<<<<<< HEAD
-=======
+
 	private IElevator mElevatorSystem = null;
 
 	public App(IElevator ElevatorSystem) {
 		mElevatorSystem = ElevatorSystem;
 	}
->>>>>>> samuel
 
 	/** {@inheritDoc} */
 	@Override
@@ -69,15 +67,6 @@ public class App extends Application {
 
 		console = (TextArea) scene.lookup("#txtConsole");
 
-<<<<<<< HEAD
-		AddElevator(1);
-		AddElevator(2);
-		AddElevator(3);
-
-		setElevatorFloor(3, 1, true);
-		setTargetFloor(2, 1);
-		setTargetFloor(1, 0);
-=======
 		ecc.update(mElevatorSystem);
 		Building building = ecc.getBuilding();
 		InitFromBuilding(building);
@@ -117,7 +106,7 @@ public class App extends Application {
 				setFloorService(i, j, thisElev.IsServicedFloor(j));
 			}
 		}
->>>>>>> samuel
+
 	}
 
 	private void AddElevator(int amountFloors) throws Exception {
@@ -182,26 +171,14 @@ public class App extends Application {
 		cb.setOnAction(event -> {
 			@SuppressWarnings("unchecked")
 			ChoiceBox<Integer> cb1 = (ChoiceBox<Integer>) event.getSource();
-<<<<<<< HEAD
+
 			if (!cb1.isDisabled()) {
 				int selected = cb1.getValue() - 1;
 				try {
-					setElevatorFloor(elevatornum, selected, false);
+					setElevatorFloor(elevatornum, selected, 2);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-		});
-		setElevatorFloor(elevatornum, 0, false);
-	}
-
-	private void setTargetFloor(int elevatornum, int floornum) {
-=======
-			int selected = cb1.getValue() - 1;
-			try {
-				setElevatorFloor(elevatornum, selected, 2);
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		});
 		setElevatorFloor(elevatornum, 0, 2);
@@ -222,7 +199,6 @@ public class App extends Application {
 			return;
 		}
 
->>>>>>> samuel
 		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
 		for (Node floor : gp.getChildren()) {
 			if (GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 1) {
@@ -233,11 +209,7 @@ public class App extends Application {
 		circle.setFill(Paint.valueOf("#ff8c00"));
 	}
 
-<<<<<<< HEAD
-	private void setElevatorFloor(int elevatornum, int floornum, boolean open) throws Exception {
-=======
 	private void setElevatorFloor(int elevatornum, int floornum, int doorstatus) throws Exception {
->>>>>>> samuel
 		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
 
 		if (gp.getRowCount() <= floornum) {
@@ -251,21 +223,6 @@ public class App extends Application {
 		}
 
 		writeToConsole("Elevator " + elevatornum + " moved to floor " + (floornum + 1));
-
-<<<<<<< HEAD
-		ImageView imageView = new ImageView();
-		if (open)
-			imageView.setImage(new Image("/ElevatorOpen.png"));
-		else
-			imageView.setImage(new Image("/ElevatorClosed.png"));
-		gp.add(imageView, 0, (gp.getRowCount() - floornum - 1));
-
-		@SuppressWarnings("unchecked")
-		ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevator" + elevatornum);
-		if (cb.isDisabled())
-			cb.setValue(floornum + 1);
-=======
-		floornum = gp.getRowCount() - floornum - 1;
 
 		ImageView imageView = new ImageView();
 		switch (doorstatus) {
@@ -285,8 +242,12 @@ public class App extends Application {
 			break;
 		}
 
-		gp.add(imageView, 0, floornum);
->>>>>>> samuel
+		gp.add(imageView, 0, gp.getRowCount() - floornum - 1);
+
+		@SuppressWarnings("unchecked")
+		ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevator" + elevatornum);
+		if (cb.isDisabled())
+			cb.setValue(floornum + 1);
 
 		// Align Elevator icon to center of grid
 		GridPane.setHalignment(imageView, HPos.CENTER);
