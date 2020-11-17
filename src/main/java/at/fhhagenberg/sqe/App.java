@@ -27,192 +27,196 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * <p>App class.</p>
+ * <p>
+ * App class.
+ * </p>
  *
  * @author Simon Bergmaier
  * @version $Id: $Id
  */
 public class App extends Application {
 
-    private Scene scene = null;
-    private TextArea console = null;
+	private Scene scene = null;
+	private TextArea console = null;
 
-    private final ElevatorControlCenter ecc = new ElevatorControlCenter();
+	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
 
-    /** {@inheritDoc} */
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/View.fxml"));
+	/** {@inheritDoc} */
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		Parent root = FXMLLoader.load(getClass().getResource("/View.fxml"));
 
-        scene = new Scene(root);
+		scene = new Scene(root);
 
-        primaryStage.setTitle("Elevator Control Center");
-        primaryStage.setResizable(false);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+		primaryStage.setTitle("Elevator Control Center");
+		primaryStage.setResizable(false);
+		primaryStage.setScene(scene);
+		primaryStage.show();
 
-        console = (TextArea) scene.lookup("#txtConsole");
-        
-        AddElevator(1);
-        AddElevator(2);
-        AddElevator(3);
+		console = (TextArea) scene.lookup("#txtConsole");
 
-        setElevatorFloor(3,1,true);
-        setTargetFloor(2,1);
-        setTargetFloor(1,0);
-    }
-    
-    private void AddElevator(int amountFloors) throws Exception {
-    	// get the part of the UI that contains all elevators
-    	HBox elevators =  (HBox) scene.lookup("#Elevators");
-    	
-    	// add new elevator to UI
-        elevators.getChildren().add(FXMLLoader.load(getClass().getResource("/OneElevator.fxml")));
-        scene.getRoot().applyCss();
-    	
-        // Get number of elevator
-        int elevatornum = elevators.getChildren().size();
+		AddElevator(1);
+		AddElevator(2);
+		AddElevator(3);
 
-        // set correct text to be displayed
-        Label lab = (Label) scene.lookup("#LabelElevatorNew");
-        lab.setId("LabelElevator"+elevatornum);
-        lab.setText("Elevator " + elevatornum);
+		setElevatorFloor(3, 1, true);
+		setTargetFloor(2, 1);
+		setTargetFloor(1, 0);
+	}
 
-        // set ID to correct number
-        GridPane gp = (GridPane) scene.lookup("#GridpaneElevatorNew");
-        gp.setId("GridpaneElevator" + elevatornum);
+	private void AddElevator(int amountFloors) throws Exception {
+		// get the part of the UI that contains all elevators
+		HBox elevators = (HBox) scene.lookup("#Elevators");
 
-        ToggleButton tb = (ToggleButton) scene.lookup("#ToggleButtonElevatorNew");
-        tb.setId("ToggleButtonElevator"+elevatornum);
-        tb.setText("Automatic");
+		// add new elevator to UI
+		elevators.getChildren().add(FXMLLoader.load(getClass().getResource("/OneElevator.fxml")));
+		scene.getRoot().applyCss();
 
-        @SuppressWarnings("unchecked")
-        ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevatorNew");
-        cb.setId("ChoiceBoxElevator"+elevatornum);
-        cb.setDisable(true);
+		// Get number of elevator
+		int elevatornum = elevators.getChildren().size();
 
-        //To apply all new IDs to respecting elements
-        scene.getRoot().applyCss();
+		// set correct text to be displayed
+		Label lab = (Label) scene.lookup("#LabelElevatorNew");
+		lab.setId("LabelElevator" + elevatornum);
+		lab.setText("Elevator " + elevatornum);
 
-        ObservableList<Integer> cbData = FXCollections.observableArrayList();
+		// set ID to correct number
+		GridPane gp = (GridPane) scene.lookup("#GridpaneElevatorNew");
+		gp.setId("GridpaneElevator" + elevatornum);
 
-        tb.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) {
-                tb.setText("Manual");
-                writeToConsole("Set Elevator " + elevatornum + " to Manual Mode");
-            }  else {
-                tb.setText("Automatic");
-                writeToConsole("Set Elevator " + elevatornum + " to Automatic Mode");
-            }
-            cb.setDisable(!newValue);
-        });
+		ToggleButton tb = (ToggleButton) scene.lookup("#ToggleButtonElevatorNew");
+		tb.setId("ToggleButtonElevator" + elevatornum);
+		tb.setText("Automatic");
 
-        // set size of grid elements
-        gp.getColumnConstraints().get(0).setMinWidth(100);
-        gp.getColumnConstraints().get(0).setMaxWidth(100);
-        gp.getColumnConstraints().get(1).setMinWidth(100);
-        gp.getColumnConstraints().get(1).setMaxWidth(100);
-        
-        // create floors for this elevator
-        for (int i = 0; i < amountFloors; i++) {
-        	AddFloorNumber(elevatornum, i, amountFloors - i);
-            cbData.add(amountFloors - i);
-        }
-        cb.setItems(cbData);
-        cb.setValue(1);
+		@SuppressWarnings("unchecked")
+		ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevatorNew");
+		cb.setId("ChoiceBoxElevator" + elevatornum);
+		cb.setDisable(true);
 
-        cb.setOnAction(event -> {
-            @SuppressWarnings("unchecked")
-            ChoiceBox<Integer> cb1 = (ChoiceBox<Integer>) event.getSource();
-            if(!cb1.isDisabled()) {
-                int selected = cb1.getValue() - 1;
-                try {
-                    setElevatorFloor(elevatornum, selected, false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        setElevatorFloor(elevatornum,0, false);
-    }
+		// To apply all new IDs to respecting elements
+		scene.getRoot().applyCss();
 
-    private void setTargetFloor(int elevatornum, int floornum) {
-        GridPane gp = (GridPane) scene.lookup("#GridpaneElevator"+elevatornum);
-        for(Node floor: gp.getChildren()) {
-            if(GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 1) {
-                ((Circle)((StackPane) floor).getChildren().get(0)).setFill(Paint.valueOf(("WHITE")));
-            }
-        }
-        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum+1));
-        circle.setFill(Paint.valueOf("#ff8c00"));
-    }
+		ObservableList<Integer> cbData = FXCollections.observableArrayList();
 
-    private void setElevatorFloor(int elevatornum, int floornum, boolean open) throws Exception {
-        GridPane gp = (GridPane) scene.lookup("#GridpaneElevator"+elevatornum);
+		tb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				tb.setText("Manual");
+				writeToConsole("Set Elevator " + elevatornum + " to Manual Mode");
+			} else {
+				tb.setText("Automatic");
+				writeToConsole("Set Elevator " + elevatornum + " to Automatic Mode");
+			}
+			cb.setDisable(!newValue);
+		});
 
-        if(gp.getRowCount() <= floornum) {
-            throw new Exception("Floor doesn't exist!");
-        }
+		// set size of grid elements
+		gp.getColumnConstraints().get(0).setMinWidth(100);
+		gp.getColumnConstraints().get(0).setMaxWidth(100);
+		gp.getColumnConstraints().get(1).setMinWidth(100);
+		gp.getColumnConstraints().get(1).setMaxWidth(100);
 
-        for (Node floor:gp.getChildren()) {
-            if(GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 0) {
-                ((ImageView) floor).setImage(null);
-            }
-        }
+		// create floors for this elevator
+		for (int i = 0; i < amountFloors; i++) {
+			AddFloorNumber(elevatornum, i, amountFloors - i);
+			cbData.add(amountFloors - i);
+		}
+		cb.setItems(cbData);
+		cb.setValue(1);
 
-        writeToConsole("Elevator " + elevatornum + " moved to floor " + (floornum+1));
+		cb.setOnAction(event -> {
+			@SuppressWarnings("unchecked")
+			ChoiceBox<Integer> cb1 = (ChoiceBox<Integer>) event.getSource();
+			if (!cb1.isDisabled()) {
+				int selected = cb1.getValue() - 1;
+				try {
+					setElevatorFloor(elevatornum, selected, false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		setElevatorFloor(elevatornum, 0, false);
+	}
 
+	private void setTargetFloor(int elevatornum, int floornum) {
+		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
+		for (Node floor : gp.getChildren()) {
+			if (GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 1) {
+				((Circle) ((StackPane) floor).getChildren().get(0)).setFill(Paint.valueOf(("WHITE")));
+			}
+		}
+		Circle circle = (Circle) scene.lookup("#Indicator" + elevatornum + "-" + (floornum + 1));
+		circle.setFill(Paint.valueOf("#ff8c00"));
+	}
 
-        ImageView imageView = new ImageView();
-        if(open)  imageView.setImage(new Image("/ElevatorOpen.png"));
-        else imageView.setImage(new Image("/ElevatorClosed.png"));
-        gp.add(imageView,0,(gp.getRowCount() - floornum - 1));
+	private void setElevatorFloor(int elevatornum, int floornum, boolean open) throws Exception {
+		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
 
-        @SuppressWarnings("unchecked")
-        ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevator"+elevatornum);
-        if(cb.isDisabled()) cb.setValue(floornum+1);
-        
-        // Align Elevator icon to center of grid
-        GridPane.setHalignment(imageView, HPos.CENTER);
-        GridPane.setValignment(imageView, VPos.CENTER);
-    }
+		if (gp.getRowCount() <= floornum) {
+			throw new Exception("Floor doesn't exist!");
+		}
 
-    private void writeToConsole(String text) {
-        console.setText(console.getText() + System.lineSeparator() + text);
-    }
+		for (Node floor : gp.getChildren()) {
+			if (GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 0) {
+				((ImageView) floor).setImage(null);
+			}
+		}
 
-    private void AddFloorNumber(int elevatornum, int rownum, int floornum) {
-    	// Create circle around floor number
+		writeToConsole("Elevator " + elevatornum + " moved to floor " + (floornum + 1));
 
-        GridPane gp = (GridPane) scene.lookup("#GridpaneElevator"+elevatornum);
+		ImageView imageView = new ImageView();
+		if (open)
+			imageView.setImage(new Image("/ElevatorOpen.png"));
+		else
+			imageView.setImage(new Image("/ElevatorClosed.png"));
+		gp.add(imageView, 0, (gp.getRowCount() - floornum - 1));
 
-    	Circle c1 = new Circle(40);
-    	c1.setId("Indicator"+ elevatornum + "-" + floornum);
-        c1.setFill(Paint.valueOf("WHITE"));
-        c1.setStrokeWidth(5);
-        c1.setStroke(Paint.valueOf("BLACK"));
-        c1.setStrokeType(StrokeType.INSIDE);
-        //gp.add(c1, 1, rownr);
+		@SuppressWarnings("unchecked")
+		ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevator" + elevatornum);
+		if (cb.isDisabled())
+			cb.setValue(floornum + 1);
 
-        StackPane stackPane = new StackPane();
+		// Align Elevator icon to center of grid
+		GridPane.setHalignment(imageView, HPos.CENTER);
+		GridPane.setValignment(imageView, VPos.CENTER);
+	}
 
-        stackPane.getChildren().add(c1);
-        
-        GridPane.setHalignment(c1, HPos.CENTER);
-        GridPane.setValignment(c1, VPos.CENTER);
-        
-        // create floor number
-        Text txt = new Text(Integer.toString(floornum));
-        txt.setFont(Font.font(20));
-        //gp.add(txt, 1, rownr);
-        stackPane.getChildren().add(txt);
-        gp.add(stackPane,1, rownum);
+	private void writeToConsole(String text) {
+		console.setText(console.getText() + System.lineSeparator() + text);
+	}
 
-        GridPane.setHalignment(txt, HPos.CENTER);
-        GridPane.setValignment(txt, VPos.CENTER);
-        
-        // set fixed height
-        gp.getRowConstraints().add(new RowConstraints(100));
-    }
-    
+	private void AddFloorNumber(int elevatornum, int rownum, int floornum) {
+		// Create circle around floor number
+
+		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
+
+		Circle c1 = new Circle(40);
+		c1.setId("Indicator" + elevatornum + "-" + floornum);
+		c1.setFill(Paint.valueOf("WHITE"));
+		c1.setStrokeWidth(5);
+		c1.setStroke(Paint.valueOf("BLACK"));
+		c1.setStrokeType(StrokeType.INSIDE);
+		// gp.add(c1, 1, rownr);
+
+		StackPane stackPane = new StackPane();
+
+		stackPane.getChildren().add(c1);
+
+		GridPane.setHalignment(c1, HPos.CENTER);
+		GridPane.setValignment(c1, VPos.CENTER);
+
+		// create floor number
+		Text txt = new Text(Integer.toString(floornum));
+		txt.setFont(Font.font(20));
+		// gp.add(txt, 1, rownr);
+		stackPane.getChildren().add(txt);
+		gp.add(stackPane, 1, rownum);
+
+		GridPane.setHalignment(txt, HPos.CENTER);
+		GridPane.setValignment(txt, VPos.CENTER);
+
+		// set fixed height
+		gp.getRowConstraints().add(new RowConstraints(100));
+	}
+
 }
