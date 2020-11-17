@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxWidth="215.0" minWidth="215.0" prefHeight="643.0" prefWidth="215.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxWidth="215.0" minWidth="215.0" prefHeight="643.0" prefWidth="215.0" xmlns="http://javafx.com/javafx/11.0.1">
     <Label id="LabelElevatorNew" prefHeight="30.0" prefWidth="188.0" text="New Elevator" textAlignment="CENTER">
         <font>
           <Font size="20.0" />

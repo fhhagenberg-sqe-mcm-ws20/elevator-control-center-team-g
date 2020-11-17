@@ -15,10 +15,11 @@ import java.rmi.RemoteException;
 public class ElevatorControlCenter {
 
 	// for getting data from actual elevator
-	private IElevator elevatorApi;
+	// we don't need that for now
+	// private IElevator elevatorApi;
 
 	// Model that contains all the data
-	private Building building;
+	private Building mBuilding;
 
 
 	/**
@@ -67,7 +68,7 @@ public class ElevatorControlCenter {
 		// Check if everything was refreshed in one tick
 		// throw everything away if it was not
 		if (currentTick == ElevatorSystem.getClockTick()) {
-			building = newbuilding;
+			mBuilding = newbuilding;
 
 		}else {
 			throw new ClockTickChangeException("Clock Tick changed during operation!");
@@ -81,7 +82,7 @@ public class ElevatorControlCenter {
 	 * @return a {@link at.fhhagenberg.sqe.model.Building} object.
 	 */
 	public Building getBuilding() {
-		return building;
+		return mBuilding;
 	}
 
 }

@@ -11,14 +11,68 @@ import java.util.List;
  */
 public class Building {
 
+	/**
+	 * <p>getFloors.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	public List<Floor> getFloors() {
+		return mFloors;
+	}
+
+	/**
+	 * <p>setFloors.</p>
+	 *
+	 * @param floors a {@link java.util.List} object.
+	 */
+	public void setFloors(List<Floor> floors) {
+		this.mFloors = floors;
+	}
+
+	/**
+	 * <p>addFloor.</p>
+	 *
+	 * @param floor a {@link at.fhhagenberg.sqe.model.Floor} object.
+	 */
+	public void addFloor(Floor floor) {
+		this.mFloors.add(floor);
+	}
+
+	/**
+	 * <p>getElevators.</p>
+	 *
+	 * @return a {@link java.util.List} object.
+	 */
+	public List<Elevator> getElevators() {
+		return mElevators;
+	}
+
+	/**
+	 * <p>setElevators.</p>
+	 *
+	 * @param elevators a {@link java.util.List} object.
+	 */
+	public void setElevators(List<Elevator> elevators) {
+		this.mElevators = elevators;
+	}
+
+	/**
+	 * <p>addElevators.</p>
+	 *
+	 * @param elevator a {@link at.fhhagenberg.sqe.model.Elevator} object.
+	 */
+	public void addElevators(Elevator elevator) {
+		this.mElevators.add(elevator);
+	}
+
 	// Floors
-	List<Floor> Floors = null;
+	private List<Floor> mFloors;
 
 	// Elevators
-	List<Elevator> Elevators = null;
+	private List<Elevator> mElevators;
 
 	// stored data that is the same for all floors/elevators
-	private int Floorheight = 0;
+	private final int mFloorheight;
 
 	/**
 	 * <p>Constructor for Building.</p>
@@ -28,15 +82,15 @@ public class Building {
 	 * @param floorheight a int.
 	 */
 	public Building(int nrOfFloors, int nrOfElevators, int floorheight) {
-		Floors = new ArrayList<Floor>(nrOfFloors);
-		Elevators = new ArrayList<Elevator>(nrOfElevators);
-		Floorheight = floorheight;
+		mFloors = new ArrayList<>(nrOfFloors);
+		mElevators = new ArrayList<>(nrOfElevators);
+		mFloorheight = floorheight;
 
 		for(int i = 0; i < nrOfElevators; i++) {
-			Elevators.add(new Elevator());
+			mElevators.add(new Elevator());
 		}
 		for(int i = 0; i < nrOfFloors; i++) {
-			Floors.add(new Floor());
+			mFloors.add(new Floor());
 		}
 	}
 
@@ -46,7 +100,7 @@ public class Building {
 	 * @return the floorheight
 	 */
 	public int getFloorheight() {
-		return Floorheight;
+		return mFloorheight;
 	}
 	
 	/**
@@ -56,7 +110,7 @@ public class Building {
 	 * @return Floor you want to get
 	 */
 	public Floor getFloor(int num) {
-		return Floors.get(num);
+		return mFloors.get(num);
 	}
 
 	/**
@@ -66,7 +120,7 @@ public class Building {
 	 * @return elevator you want to get
 	 */
 	public Elevator getElevator(int num) {
-		return Elevators.get(num);
+		return mElevators.get(num);
 	}
 	
 	/**
@@ -75,7 +129,7 @@ public class Building {
 	 * @return number of floors
 	 */
 	public int getNrOfFloors() {
-		return Floors.size();
+		return mFloors.size();
 	}
 	
 	/**
@@ -84,7 +138,7 @@ public class Building {
 	 * @return number of Elevators
 	 */
 	public int getNrOfElevators() {
-		return Elevators.size();
+		return mElevators.size();
 	}
 	
 	

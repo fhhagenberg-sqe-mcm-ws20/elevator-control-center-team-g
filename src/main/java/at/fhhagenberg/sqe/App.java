@@ -1,12 +1,8 @@
 package at.fhhagenberg.sqe;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -58,6 +54,10 @@ public class App extends Application {
         AddElevator(1);
         AddElevator(2);
         AddElevator(3);
+
+        setElevatorFloor(3,1,true);
+        setTargetFloor(2,2);
+        setTargetFloor(1,1);
     }
     
     private void AddElevator(int amountFloors) throws Exception {
@@ -66,43 +66,46 @@ public class App extends Application {
     	
     	// add new elevator to UI
         elevators.getChildren().add(FXMLLoader.load(getClass().getResource("/OneElevator.fxml")));
-
         scene.getRoot().applyCss();
     	
         // Get number of elevator
-        int Elevatornum = elevators.getChildren().size();
+        int elevatornum = elevators.getChildren().size();
+
         // set correct text to be displayed
         Label lab = (Label) scene.lookup("#LabelElevatorNew");
-        lab.setId("LabelElevator"+Elevatornum);
-        lab.setText("Elevator " + Elevatornum);
-        GridPane gp = (GridPane) scene.lookup("#GridpaneElevatorNew");
+        lab.setId("LabelElevator"+elevatornum);
+        lab.setText("Elevator " + elevatornum);
+
         // set ID to correct number
-        gp.setId("GridpaneElevator" + Elevatornum);
+        GridPane gp = (GridPane) scene.lookup("#GridpaneElevatorNew");
+        gp.setId("GridpaneElevator" + elevatornum);
+
         ToggleButton tb = (ToggleButton) scene.lookup("#ToggleButtonElevatorNew");
-        tb.setId("ToggleButtonElevator"+Elevatornum);
+        tb.setId("ToggleButtonElevator"+elevatornum);
         tb.setText("Automatic");
 
-
-
+        @SuppressWarnings("unchecked")
         ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevatorNew");
-        cb.setId("ChoiceBoxElevator"+Elevatornum);
+        cb.setId("ChoiceBoxElevator"+elevatornum);
         cb.setDisable(true);
 
-        tb.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if(newValue) {
-                    tb.setText("Manual");
-                    writeToConsole("Set Elevator " + Elevatornum + " to Manual Mode");
-                }  else {
-                    tb.setText("Automatic");
-                    writeToConsole("Set Elevator " + Elevatornum + " to Automatic Mode");
-                }
-                cb.setDisable(!newValue);
+        //To apply all new IDs to respecting elements
+        scene.getRoot().applyCss();
+
+        ObservableList<Integer> cbData = FXCollections.observableArrayList();
+
+        tb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                tb.setText("Manual");
+                writeToConsole("Set Elevator " + elevatornum + " to Manual Mode");
+            }  else {
+                tb.setText("Automatic");
+                writeToConsole("Set Elevator " + elevatornum + " to Automatic Mode");
             }
+            cb.setDisable(!newValue);
         });
 
-        // set size of grid elems
+        // set size of grid elements
         gp.getColumnConstraints().get(0).setMinWidth(100);
         gp.getColumnConstraints().get(0).setMaxWidth(100);
         gp.getColumnConstraints().get(1).setMinWidth(100);
@@ -110,27 +113,23 @@ public class App extends Application {
         
         // create floors for this elevator
         for (int i = 0; i < amountFloors; i++) {
-        	AddFloorNumber(Elevatornum, i, amountFloors - i);
-            cb.getItems().add(amountFloors - i);
+        	AddFloorNumber(elevatornum, i, amountFloors - i);
+            cbData.add(amountFloors - i);
         }
-
-        scene.getRoot().applyCss();
-
+        cb.setItems(cbData);
         cb.setValue(1);
 
-        cb.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                ChoiceBox<Integer> cb = (ChoiceBox<Integer>) event.getSource();
-                int selected = cb.getValue() - 1;
-                try {
-                    setElevatorFloor(Elevatornum,selected,false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        cb.setOnAction(event -> {
+            @SuppressWarnings("unchecked")
+            ChoiceBox<Integer> cb1 = (ChoiceBox<Integer>) event.getSource();
+            int selected = cb1.getValue() - 1;
+            try {
+                setElevatorFloor(elevatornum,selected,false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
-        setElevatorFloor(Elevatornum,0, false);
+        setElevatorFloor(elevatornum,0, false);
     }
 
     private void setTargetFloor(int elevatornum, int floornum) {
@@ -172,7 +171,7 @@ public class App extends Application {
         console.setText(console.getText() + System.lineSeparator() + text);
     }
 
-    private void AddFloorNumber(int elevatornum, int rownr, int floornum) {
+    private void AddFloorNumber(int elevatornum, int rownum, int floornum) {
     	// Create circle around floor number
 
         GridPane gp = (GridPane) scene.lookup("#GridpaneElevator"+elevatornum);
@@ -197,7 +196,7 @@ public class App extends Application {
         txt.setFont(Font.font(20));
         //gp.add(txt, 1, rownr);
         stackPane.getChildren().add(txt);
-        gp.add(stackPane,1,rownr);
+        gp.add(stackPane,1, rownum);
 
         GridPane.setHalignment(txt, HPos.CENTER);
         GridPane.setValignment(txt, VPos.CENTER);
