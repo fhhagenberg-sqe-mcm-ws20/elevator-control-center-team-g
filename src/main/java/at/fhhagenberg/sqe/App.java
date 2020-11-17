@@ -1,5 +1,10 @@
 package at.fhhagenberg.sqe;
 
+import java.rmi.RemoteException;
+
+import at.fhhagenberg.sqe.model.Building;
+import at.fhhagenberg.sqe.model.Elevator;
+import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +30,7 @@ import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sqelevator.IElevator;
 
 /**
  * <p>
@@ -40,6 +46,14 @@ public class App extends Application {
 	private TextArea console = null;
 
 	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
+<<<<<<< HEAD
+=======
+	private IElevator mElevatorSystem = null;
+
+	public App(IElevator ElevatorSystem) {
+		mElevatorSystem = ElevatorSystem;
+	}
+>>>>>>> samuel
 
 	/** {@inheritDoc} */
 	@Override
@@ -55,6 +69,7 @@ public class App extends Application {
 
 		console = (TextArea) scene.lookup("#txtConsole");
 
+<<<<<<< HEAD
 		AddElevator(1);
 		AddElevator(2);
 		AddElevator(3);
@@ -62,6 +77,47 @@ public class App extends Application {
 		setElevatorFloor(3, 1, true);
 		setTargetFloor(2, 1);
 		setTargetFloor(1, 0);
+=======
+		ecc.update(mElevatorSystem);
+		Building building = ecc.getBuilding();
+		InitFromBuilding(building);
+		UpdateFromBuilding(building);
+
+//        AddElevator(1);
+//        AddElevator(2);
+//        AddElevator(3);
+//
+//        setElevatorFloor(3,1,true);
+//        setTargetFloor(2,2);
+//        setTargetFloor(1,1);
+	}
+
+	private void InitFromBuilding(Building building) throws Exception {
+		// Create floor GUI
+		for (int i = 0; i < building.getNrOfFloors(); i++) {
+			// TODO show floors
+		}
+		// Create GUI for each elevator
+		for (int i = 0; i < building.getNrOfElevators(); i++) {
+			Elevator thisElev = building.getElevator(i);
+			AddElevator(building.getNrOfFloors());
+		}
+	}
+
+	private void UpdateFromBuilding(Building building) throws Exception {
+		for (int i = 0; i < building.getNrOfElevators(); i++) {
+			// get elevator
+			Elevator thisElev = building.getElevator(i);
+			// Place the Elevator on the correct floor
+			setElevatorFloor(i + 1, thisElev.getCurrentFloor(), thisElev.getDoorStatus());
+			// make the target floor orange
+			setTargetFloor(i + 1, thisElev.getTarget());
+			// grey out floors that are not serviced
+			for (int j = 0; j < building.getNrOfFloors(); j++) {
+				setFloorService(i, j, thisElev.IsServicedFloor(j));
+			}
+		}
+>>>>>>> samuel
 	}
 
 	private void AddElevator(int amountFloors) throws Exception {
@@ -126,6 +182,7 @@ public class App extends Application {
 		cb.setOnAction(event -> {
 			@SuppressWarnings("unchecked")
 			ChoiceBox<Integer> cb1 = (ChoiceBox<Integer>) event.getSource();
+<<<<<<< HEAD
 			if (!cb1.isDisabled()) {
 				int selected = cb1.getValue() - 1;
 				try {
@@ -139,6 +196,33 @@ public class App extends Application {
 	}
 
 	private void setTargetFloor(int elevatornum, int floornum) {
+=======
+			int selected = cb1.getValue() - 1;
+			try {
+				setElevatorFloor(elevatornum, selected, 2);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		setElevatorFloor(elevatornum, 0, 2);
+	}
+
+	private void setFloorService(int elevatornum, int floornum, boolean isToBeServiced) {
+		Circle circle = (Circle) scene.lookup("#Indicator" + (elevatornum + 1) + "-" + (floornum + 1));
+		if (isToBeServiced) {
+			circle.setStroke(Paint.valueOf(("BLACK")));
+		} else {
+			circle.setStroke(Paint.valueOf(("LIGHTGREY")));
+		}
+	}
+
+	private void setTargetFloor(int elevatornum, int floornum) {
+		// return if there is no target floor
+		if (floornum == -1) {
+			return;
+		}
+
+>>>>>>> samuel
 		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
 		for (Node floor : gp.getChildren()) {
 			if (GridPane.getColumnIndex(floor) != null && GridPane.getColumnIndex(floor) == 1) {
@@ -149,7 +233,11 @@ public class App extends Application {
 		circle.setFill(Paint.valueOf("#ff8c00"));
 	}
 
+<<<<<<< HEAD
 	private void setElevatorFloor(int elevatornum, int floornum, boolean open) throws Exception {
+=======
+	private void setElevatorFloor(int elevatornum, int floornum, int doorstatus) throws Exception {
+>>>>>>> samuel
 		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
 
 		if (gp.getRowCount() <= floornum) {
@@ -164,6 +252,7 @@ public class App extends Application {
 
 		writeToConsole("Elevator " + elevatornum + " moved to floor " + (floornum + 1));
 
+<<<<<<< HEAD
 		ImageView imageView = new ImageView();
 		if (open)
 			imageView.setImage(new Image("/ElevatorOpen.png"));
@@ -175,6 +264,29 @@ public class App extends Application {
 		ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevator" + elevatornum);
 		if (cb.isDisabled())
 			cb.setValue(floornum + 1);
+=======
+		floornum = gp.getRowCount() - floornum - 1;
+
+		ImageView imageView = new ImageView();
+		switch (doorstatus) {
+		case 1:
+			imageView.setImage(new Image("/ElevatorOpen.png"));
+			break;
+		case 2:
+			imageView.setImage(new Image("/ElevatorClosed.png"));
+			break;
+		case 3:
+			// TODO
+			break;
+		case 4:
+			// TODO
+			break;
+		default:
+			break;
+		}
+
+		gp.add(imageView, 0, floornum);
+>>>>>>> samuel
 
 		// Align Elevator icon to center of grid
 		GridPane.setHalignment(imageView, HPos.CENTER);
