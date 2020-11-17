@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -141,7 +142,7 @@ public class App extends Application {
                 ((Circle)((StackPane) floor).getChildren().get(0)).setFill(Paint.valueOf(("WHITE")));
             }
         }
-        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum+1));
+        Circle circle = (Circle) scene.lookup("#Indicator"+ elevatornum + "-" + (floornum));
         circle.setFill(Paint.valueOf("#ff8c00"));
     }
 
@@ -167,6 +168,10 @@ public class App extends Application {
         if(open)  imageView.setImage(new Image("/ElevatorOpen.png"));
         else imageView.setImage(new Image("/ElevatorClosed.png"));
         gp.add(imageView,0,floornum);
+        
+        // Align Elevator icon to center of grid
+        GridPane.setHalignment(imageView, HPos.CENTER);
+        GridPane.setValignment(imageView, VPos.CENTER);
     }
 
     private void writeToConsole(String text) {
