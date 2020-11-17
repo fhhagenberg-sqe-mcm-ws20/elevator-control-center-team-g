@@ -148,7 +148,7 @@ public class MockBuilding implements IElevator {
         public int mElevatorSpeed = 0;
         public int mElevatorWeight = 0;
         public int mElevatorCapacity = 15;
-        public int mTarget = 0;
+        public int mTarget = -1;
 
         public MockFloor[] mServiceFloors;
         public boolean[] MockFloorButtonPressed;

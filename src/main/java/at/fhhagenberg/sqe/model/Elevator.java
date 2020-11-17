@@ -249,7 +249,7 @@ public class Elevator {
 	 * @param target the target to set
 	 */
 	public void setTarget(int target) {
-		if(IsServicedFloor(target)) this.target = target;
+		if(IsServicedFloor(target) || target == -1) this.target = target;
 		else throw new IllegalArgumentException("Target was not valid!");
 	}
 
