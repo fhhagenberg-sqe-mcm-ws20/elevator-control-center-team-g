@@ -21,6 +21,7 @@ public class MockBuilding implements IElevator {
         	for (int j = 0; j < floors; j++) {
         		mElevators[i].MockFloorButtonPressed[j]  = false;
 			}
+        	mElevators[i].mCommittedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 		}
         mFloors = new MockFloor[floors];
         for (int i = 0; i < floors; i++) {

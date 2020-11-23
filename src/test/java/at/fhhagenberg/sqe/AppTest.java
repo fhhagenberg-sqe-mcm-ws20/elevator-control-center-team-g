@@ -46,6 +46,9 @@ public class AppTest {
         mockBuilding.mElevators[1].mTarget = 1;
         mockBuilding.mElevators[1].mCommittedDirection = IElevator.ELEVATOR_DIRECTION_UP;
         
+        mockBuilding.mElevators[2].mCommittedDirection = IElevator.ELEVATOR_DIRECTION_DOWN;
+        
+        
         mockBuilding.mFloors[0].mFloorButtonUP = true;
         mockBuilding.mFloors[1].mFloorButtonDOWN = true;
         mockBuilding.mFloors[2].mFloorButtonUP = true;

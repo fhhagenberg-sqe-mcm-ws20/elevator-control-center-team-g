@@ -52,7 +52,7 @@ public class App extends Application {
 	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
 
 	private IElevator mElevatorSystem = null;
-	
+
 	private final String OurOrange = "#ff8c00";
 
 	public App(IElevator ElevatorSystem) {
@@ -110,7 +110,8 @@ public class App extends Application {
 			for (int j = 0; j < building.getNrOfFloors(); j++) {
 				setFloorService(i, j, thisElev.IsServicedFloor(j));
 			}
-
+			// show comitted direction of elevator
+			ShowComittedDirection(i+1, thisElev.getDirection());
 		}
 
 		// update all Floors
@@ -119,25 +120,47 @@ public class App extends Application {
 			setButtonUpColor(j, building.getFloor(j).isButtonUpPressed());
 			setButtonDownColor(j, building.getFloor(j).isButtonDownPressed());
 		}
+	}
 
+	private void ShowComittedDirection(int elevatornr, int direction) {
+		// get the arrows
+		SVGPath dirdown = (SVGPath) scene.lookup("#Elevator" + elevatornr + "DirDown");
+		SVGPath dirup = (SVGPath) scene.lookup("#Elevator" + elevatornr + "DirUp");
+		
+		// color arrows according to committed direction of the elevator
+		switch (direction) {
+		case IElevator.ELEVATOR_DIRECTION_UNCOMMITTED:
+			dirdown.setFill(Paint.valueOf("LIGHTGREY"));
+			dirup.setFill(Paint.valueOf("LIGHTGREY"));
+			break;
+		case IElevator.ELEVATOR_DIRECTION_UP:
+			dirdown.setFill(Paint.valueOf("LIGHTGREY"));
+			dirup.setFill(Paint.valueOf(OurOrange));
+			break;
+		case IElevator.ELEVATOR_DIRECTION_DOWN:
+			dirdown.setFill(Paint.valueOf(OurOrange));
+			dirup.setFill(Paint.valueOf("LIGHTGREY"));
+			break;
+		default:
+			writeToConsole("DEBUG ERROR: Invalid value in direction of elevator");
+			break;
+		}
 	}
 
 	private void setButtonUpColor(int floornr, Boolean isPressed) {
 		SVGPath arrow = (SVGPath) scene.lookup("#ArrowUp" + floornr);
-		if(isPressed) {
+		if (isPressed) {
 			arrow.setFill(Paint.valueOf(OurOrange));
-		}
-		else {
+		} else {
 			arrow.setFill(Paint.valueOf("LIGHTGREY"));
 		}
 	}
 
 	private void setButtonDownColor(int floornr, Boolean isPressed) {
 		SVGPath arrow = (SVGPath) scene.lookup("#ArrowDown" + floornr);
-		if(isPressed) {
+		if (isPressed) {
 			arrow.setFill(Paint.valueOf(OurOrange));
-		}
-		else {
+		} else {
 			arrow.setFill(Paint.valueOf("LIGHTGREY"));
 		}
 	}
@@ -234,6 +257,12 @@ public class App extends Application {
 		ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevatorNew");
 		cb.setId("ChoiceBoxElevator" + elevatornum);
 		cb.setDisable(true);
+		
+		SVGPath dirUp = (SVGPath) scene.lookup("#ElevatorDirUpNew");
+		dirUp.setId("Elevator" + elevatornum + "DirUp");
+		
+		SVGPath dirDown = (SVGPath) scene.lookup("#ElevatorDirDownNew");
+		dirDown.setId("Elevator" + elevatornum + "DirDown");
 
 		// To apply all new IDs to respecting elements
 		scene.getRoot().applyCss();

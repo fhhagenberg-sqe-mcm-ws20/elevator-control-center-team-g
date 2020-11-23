@@ -16,8 +16,8 @@
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
-        <SVGPath content="M15 0 L7 20 L22 20 Z" fill="LIGHTGREY" stroke="BLACK" />
-        <SVGPath content="M15 0 L7 20 L22 20 Z" fill="LIGHTGREY" rotate="180.0" stroke="BLACK" />
+        <SVGPath id="ElevatorDirUpNew" content="M15 0 L7 20 L22 20 Z" fill="LIGHTGREY" stroke="BLACK" />
+        <SVGPath id="ElevatorDirDownNew" content="M15 0 L7 20 L22 20 Z" fill="LIGHTGREY" rotate="180.0" stroke="BLACK" />
     </HBox>
     <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="215.0" prefWidth="215.0">
         <!-- <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="396.0" prefWidth="200.0">
