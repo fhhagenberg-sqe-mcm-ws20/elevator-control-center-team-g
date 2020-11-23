@@ -27,7 +27,7 @@ public class AppTest {
      */
     @Start
     public void start(Stage stage) throws Exception {
-    	mockBuilding = new MockBuilding(3,3,500);
+    	mockBuilding = new MockBuilding(4,3,500);
 
         mockBuilding.setServicesFloors(0,0,true);
         mockBuilding.setServicesFloors(0,1,true);
@@ -42,6 +42,9 @@ public class AppTest {
         
         mockBuilding.mElevators[0].mElevatorFloor = 2;
         mockBuilding.mElevators[0].mElevatorDoorStatus = IElevator.ELEVATOR_DOORS_OPEN;
+        
+        mockBuilding.mElevators[2].mElevatorDoorStatus = IElevator.ELEVATOR_DOORS_OPENING;
+        mockBuilding.mElevators[3].mElevatorDoorStatus = IElevator.ELEVATOR_DOORS_CLOSING;
         
         mockBuilding.mElevators[1].mTarget = 1;
         mockBuilding.mElevators[1].mCommittedDirection = IElevator.ELEVATOR_DIRECTION_UP;

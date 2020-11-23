@@ -352,17 +352,17 @@ public class App extends Application {
 
 		ImageView imageView = new ImageView();
 		switch (doorstatus) {
-		case 1:
+		case IElevator.ELEVATOR_DOORS_OPEN:
 			imageView.setImage(new Image("/ElevatorOpen.png"));
 			break;
-		case 2:
+		case IElevator.ELEVATOR_DOORS_CLOSED:
 			imageView.setImage(new Image("/ElevatorClosed.png"));
 			break;
-		case 3:
-			// TODO
+		case IElevator.ELEVATOR_DOORS_OPENING:
+			imageView.setImage(new Image("/ElevatorOpening.png"));
 			break;
-		case 4:
-			// TODO
+		case IElevator.ELEVATOR_DOORS_CLOSING:
+			imageView.setImage(new Image("/ElevatorClosing.png"));
 			break;
 		default:
 			break;
