@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -24,8 +25,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -83,14 +86,77 @@ public class App extends Application {
 
 	private void InitFromBuilding(Building building) throws Exception {
 		// Create floor GUI
-		for (int i = 0; i < building.getNrOfFloors(); i++) {
-			// TODO show floors
-		}
+		AddFloors(building.getNrOfFloors());
 		// Create GUI for each elevator
 		for (int i = 0; i < building.getNrOfElevators(); i++) {
 			Elevator thisElev = building.getElevator(i);
 			AddElevator(building.getNrOfFloors());
 		}
+	}
+
+	private void AddFloors(int NrOfFloors) {
+		// get the part of the UI that contains all floors
+		VBox Floors = (VBox) scene.lookup("#Floors");
+
+		// add Floors
+		for (int i = 0; i < NrOfFloors; i++) {
+			// Calc number of floor (floors have to be added with highest first)
+			int floornum = NrOfFloors - i - 1;
+
+			// Get gridpane that should show floor numbers
+			GridPane gp = (GridPane) scene.lookup("#GridpaneFloors");
+
+			// Draw circle for Floor number
+			Circle c1 = new Circle(40);
+			c1.setId("IndicatorFloor" + (floornum + 1));
+			c1.setFill(Paint.valueOf("WHITE"));
+			c1.setStrokeWidth(5);
+			c1.setStroke(Paint.valueOf("BLACK"));
+			c1.setStrokeType(StrokeType.INSIDE);
+			// new Stackpane for centering floor number and circle
+			StackPane stackPane = new StackPane();
+			stackPane.getChildren().add(c1);
+			GridPane.setHalignment(c1, HPos.CENTER);
+			GridPane.setValignment(c1, VPos.CENTER);
+
+			// create floor number
+			Text txt = new Text(Integer.toString(floornum + 1));
+			txt.setFont(Font.font(20));
+			stackPane.getChildren().add(txt);
+			// add stackpane to correct element of gridpane
+			gp.add(stackPane, 1, i);
+			// center
+			GridPane.setHalignment(txt, HPos.CENTER);
+			GridPane.setValignment(txt, VPos.CENTER);
+			// set fixed height
+			gp.getRowConstraints().add(new RowConstraints(100));
+
+			// draw arrow up
+			SVGPath ArrowUp = new SVGPath();
+			ArrowUp.setId("ArrowUp" + floornum);
+			ArrowUp.setContent("M45 0 L21 60 L66 60 Z");
+			ArrowUp.setFill(Paint.valueOf("LIGHTGREY"));
+			ArrowUp.setStroke(Paint.valueOf("BLACK"));
+			// draw arrow down
+			SVGPath ArrowDown = new SVGPath();
+			ArrowDown.setId("ArrowDown" + floornum);
+			ArrowDown.setContent("M45 0 L21 60 L66 60 Z");
+			ArrowDown.setFill(Paint.valueOf("LIGHTGREY"));
+			ArrowDown.setStroke(Paint.valueOf("BLACK"));
+			ArrowDown.setRotate(180);
+			// create new hbox for arrows
+			HBox arrows = new HBox();
+			// add arrows to hbox
+			arrows.getChildren().add(ArrowUp);
+			arrows.getChildren().add(ArrowDown);
+			// add hbox to gridplane
+			gp.add(arrows, 0, i);
+			// align arrows to center of available space
+			arrows.setAlignment(Pos.CENTER);
+		}
+		// refresh UI
+		scene.getRoot().applyCss();
+
 	}
 
 	private void UpdateFromBuilding(Building building) throws Exception {
