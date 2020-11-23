@@ -1,14 +1,10 @@
 package at.fhhagenberg.sqe;
 
-import java.rmi.RemoteException;
-
 import at.fhhagenberg.sqe.model.Building;
 import at.fhhagenberg.sqe.model.Elevator;
-import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -22,11 +18,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
@@ -51,10 +43,15 @@ public class App extends Application {
 
 	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
 
-	private IElevator mElevatorSystem = null;
+	private IElevator mElevatorSystem;
 
 	private final String OurOrange = "#ff8c00";
 
+	/**
+	 * <p>Constructor for App.</p>
+	 *
+	 * @param ElevatorSystem a {@link sqelevator.IElevator} object.
+	 */
 	public App(IElevator ElevatorSystem) {
 		mElevatorSystem = ElevatorSystem;
 	}
@@ -87,7 +84,13 @@ public class App extends Application {
 //        setTargetFloor(1,1);
 	}
 
-	private void InitFromBuilding(Building building) throws Exception {
+	/**
+	 * <p>InitFromBuilding.</p>
+	 *
+	 * @param building a {@link at.fhhagenberg.sqe.model.Building} object.
+	 * @throws java.lang.Exception if any.
+	 */
+	public void InitFromBuilding(Building building) throws Exception {
 		// Create floor GUI
 		AddFloors(building.getNrOfFloors());
 		// Create GUI for each elevator
@@ -97,7 +100,13 @@ public class App extends Application {
 		}
 	}
 
-	private void UpdateFromBuilding(Building building) throws Exception {
+	/**
+	 * <p>UpdateFromBuilding.</p>
+	 *
+	 * @param building a {@link at.fhhagenberg.sqe.model.Building} object.
+	 * @throws java.lang.Exception if any.
+	 */
+	public void UpdateFromBuilding(Building building) throws Exception {
 		// update all elevators
 		for (int i = 0; i < building.getNrOfElevators(); i++) {
 			// get elevator
@@ -122,6 +131,12 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * <p>ShowComittedDirection.</p>
+	 *
+	 * @param elevatornr a int.
+	 * @param direction a int.
+	 */
 	private void ShowComittedDirection(int elevatornr, int direction) {
 		// get the arrows
 		SVGPath dirdown = (SVGPath) scene.lookup("#Elevator" + elevatornr + "DirDown");
@@ -147,6 +162,12 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * <p>setButtonUpColor.</p>
+	 *
+	 * @param floornr a int.
+	 * @param isPressed a {@link java.lang.Boolean} object.
+	 */
 	private void setButtonUpColor(int floornr, Boolean isPressed) {
 		SVGPath arrow = (SVGPath) scene.lookup("#ArrowUp" + floornr);
 		if (isPressed) {
@@ -156,6 +177,12 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * <p>setButtonDownColor.</p>
+	 *
+	 * @param floornr a int.
+	 * @param isPressed a {@link java.lang.Boolean} object.
+	 */
 	private void setButtonDownColor(int floornr, Boolean isPressed) {
 		SVGPath arrow = (SVGPath) scene.lookup("#ArrowDown" + floornr);
 		if (isPressed) {
@@ -165,6 +192,11 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * <p>AddFloors.</p>
+	 *
+	 * @param NrOfFloors a int.
+	 */
 	private void AddFloors(int NrOfFloors) {
 		// get the part of the UI that contains all floors
 		VBox Floors = (VBox) scene.lookup("#Floors");
@@ -224,11 +256,19 @@ public class App extends Application {
 			gp.add(arrows, 0, i);
 			// align arrows to center of available space
 			arrows.setAlignment(Pos.CENTER);
+
+			ArrowDown.setOnMouseClicked(event -> ArrowDown.setFill(Paint.valueOf("#ff8c00")));
 		}
 		// refresh UI
 		scene.getRoot().applyCss();
 	}
 
+	/**
+	 * <p>AddElevator.</p>
+	 *
+	 * @param amountFloors a int.
+	 * @throws java.lang.Exception if any.
+	 */
 	private void AddElevator(int amountFloors) throws Exception {
 		// get the part of the UI that contains all elevators
 		HBox elevators = (HBox) scene.lookup("#Elevators");
@@ -310,6 +350,13 @@ public class App extends Application {
 		setElevatorFloor(elevatornum, 0, 2);
 	}
 
+	/**
+	 * <p>setFloorService.</p>
+	 *
+	 * @param elevatornum a int.
+	 * @param floornum a int.
+	 * @param isToBeServiced a boolean.
+	 */
 	private void setFloorService(int elevatornum, int floornum, boolean isToBeServiced) {
 		Circle circle = (Circle) scene.lookup("#Indicator" + (elevatornum + 1) + "-" + (floornum + 1));
 		if (isToBeServiced) {
@@ -319,6 +366,12 @@ public class App extends Application {
 		}
 	}
 
+	/**
+	 * <p>setTargetFloor.</p>
+	 *
+	 * @param elevatornum a int.
+	 * @param floornum a int.
+	 */
 	private void setTargetFloor(int elevatornum, int floornum) {
 		// return if there is no target floor
 		if (floornum == -1) {
@@ -335,6 +388,14 @@ public class App extends Application {
 		circle.setFill(Paint.valueOf(OurOrange));
 	}
 
+	/**
+	 * <p>setElevatorFloor.</p>
+	 *
+	 * @param elevatornum a int.
+	 * @param floornum a int.
+	 * @param doorstatus a int.
+	 * @throws java.lang.Exception if any.
+	 */
 	private void setElevatorFloor(int elevatornum, int floornum, int doorstatus) throws Exception {
 		GridPane gp = (GridPane) scene.lookup("#GridpaneElevator" + elevatornum);
 
@@ -380,10 +441,22 @@ public class App extends Application {
 		GridPane.setValignment(imageView, VPos.CENTER);
 	}
 
+	/**
+	 * <p>writeToConsole.</p>
+	 *
+	 * @param text a {@link java.lang.String} object.
+	 */
 	private void writeToConsole(String text) {
 		console.setText(console.getText() + System.lineSeparator() + text);
 	}
 
+	/**
+	 * <p>AddFloorNumber.</p>
+	 *
+	 * @param elevatornum a int.
+	 * @param rownum a int.
+	 * @param floornum a int.
+	 */
 	private void AddFloorNumber(int elevatornum, int rownum, int floornum) {
 		// Create circle around floor number
 
