@@ -8,6 +8,7 @@ import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -51,6 +52,8 @@ public class App extends Application {
 	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
 
 	private IElevator mElevatorSystem = null;
+	
+	private final String OurOrange = "#ff8c00";
 
 	public App(IElevator ElevatorSystem) {
 		mElevatorSystem = ElevatorSystem;
@@ -91,6 +94,51 @@ public class App extends Application {
 		for (int i = 0; i < building.getNrOfElevators(); i++) {
 			Elevator thisElev = building.getElevator(i);
 			AddElevator(building.getNrOfFloors());
+		}
+	}
+
+	private void UpdateFromBuilding(Building building) throws Exception {
+		// update all elevators
+		for (int i = 0; i < building.getNrOfElevators(); i++) {
+			// get elevator
+			Elevator thisElev = building.getElevator(i);
+			// Place the Elevator on the correct floor
+			setElevatorFloor(i + 1, thisElev.getCurrentFloor(), thisElev.getDoorStatus());
+			// make the target floor orange
+			setTargetFloor(i + 1, thisElev.getTarget());
+			// grey out floors that are not serviced
+			for (int j = 0; j < building.getNrOfFloors(); j++) {
+				setFloorService(i, j, thisElev.IsServicedFloor(j));
+			}
+
+		}
+
+		// update all Floors
+		for (int j = 0; j < building.getNrOfFloors(); j++) {
+			// show which buttons are pressed on which floors
+			setButtonUpColor(j, building.getFloor(j).isButtonUpPressed());
+			setButtonDownColor(j, building.getFloor(j).isButtonDownPressed());
+		}
+
+	}
+
+	private void setButtonUpColor(int floornr, Boolean isPressed) {
+		SVGPath arrow = (SVGPath) scene.lookup("#ArrowUp" + floornr);
+		if(isPressed) {
+			arrow.setFill(Paint.valueOf(OurOrange));
+		}
+		else {
+			arrow.setFill(Paint.valueOf("LIGHTGREY"));
+		}
+	}
+
+	private void setButtonDownColor(int floornr, Boolean isPressed) {
+		SVGPath arrow = (SVGPath) scene.lookup("#ArrowDown" + floornr);
+		if(isPressed) {
+			arrow.setFill(Paint.valueOf(OurOrange));
+		}
+		else {
+			arrow.setFill(Paint.valueOf("LIGHTGREY"));
 		}
 	}
 
@@ -156,23 +204,6 @@ public class App extends Application {
 		}
 		// refresh UI
 		scene.getRoot().applyCss();
-
-	}
-
-	private void UpdateFromBuilding(Building building) throws Exception {
-		for (int i = 0; i < building.getNrOfElevators(); i++) {
-			// get elevator
-			Elevator thisElev = building.getElevator(i);
-			// Place the Elevator on the correct floor
-			setElevatorFloor(i + 1, thisElev.getCurrentFloor(), thisElev.getDoorStatus());
-			// make the target floor orange
-			setTargetFloor(i + 1, thisElev.getTarget());
-			// grey out floors that are not serviced
-			for (int j = 0; j < building.getNrOfFloors(); j++) {
-				setFloorService(i, j, thisElev.IsServicedFloor(j));
-			}
-		}
-
 	}
 
 	private void AddElevator(int amountFloors) throws Exception {
@@ -272,7 +303,7 @@ public class App extends Application {
 			}
 		}
 		Circle circle = (Circle) scene.lookup("#Indicator" + elevatornum + "-" + (floornum + 1));
-		circle.setFill(Paint.valueOf("#ff8c00"));
+		circle.setFill(Paint.valueOf(OurOrange));
 	}
 
 	private void setElevatorFloor(int elevatornum, int floornum, int doorstatus) throws Exception {
