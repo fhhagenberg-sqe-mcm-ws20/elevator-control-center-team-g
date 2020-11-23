@@ -2,7 +2,6 @@ package at.fhhagenberg.sqe;
 
 import sqelevator.IElevator;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public class MockBuilding implements IElevator {
@@ -10,10 +9,8 @@ public class MockBuilding implements IElevator {
     public MockElevator[] mElevators;
     public MockFloor[] mFloors;
     private final int mFloorHeight;
-    private int mClockTick = 15;
 
-
-    private boolean shouldThrowRemoteException = false;
+    private final long mClockTick = 15;
 
     public MockBuilding(int nrOfElevators, int floors, int floorHeight) {
         mElevators = new MockElevator[nrOfElevators];
@@ -24,6 +21,7 @@ public class MockBuilding implements IElevator {
         	for (int j = 0; j < floors; j++) {
         		mElevators[i].MockFloorButtonPressed[j]  = false;
 			}
+        	mElevators[i].mCommittedDirection = IElevator.ELEVATOR_DIRECTION_UNCOMMITTED;
 		}
         mFloors = new MockFloor[floors];
         for (int i = 0; i < floors; i++) {
@@ -33,93 +31,92 @@ public class MockBuilding implements IElevator {
     }
 
     @Override
-    public int getCommittedDirection(int elevatorNumber) throws RemoteException {
+    public int getCommittedDirection(int elevatorNumber) {
         return mElevators[elevatorNumber].mCommittedDirection;
     }
 
     @Override
-    public int getElevatorAccel(int elevatorNumber) throws RemoteException {
+    public int getElevatorAccel(int elevatorNumber) {
         return mElevators[elevatorNumber].mElevatorAccel;
     }
 
     @Override
-    public boolean getElevatorButton(int elevatorNumber, int floor) throws RemoteException {
+    public boolean getElevatorButton(int elevatorNumber, int floor) {
         return mElevators[elevatorNumber].getElevatorButton(floor);
     }
 
     @Override
-    public int getElevatorDoorStatus(int elevatorNumber) throws RemoteException {
+    public int getElevatorDoorStatus(int elevatorNumber) {
         return mElevators[elevatorNumber].mElevatorDoorStatus;
     }
 
     @Override
-    public int getElevatorFloor(int elevatorNumber) throws RemoteException {
+    public int getElevatorFloor(int elevatorNumber) {
         return mElevators[elevatorNumber].mElevatorFloor;
     }
 
     @Override
-    public int getElevatorNum() throws RemoteException {
+    public int getElevatorNum() {
         return mElevators.length;
     }
 
     @Override
-    public int getElevatorPosition(int elevatorNumber) throws RemoteException {
+    public int getElevatorPosition(int elevatorNumber) {
         return mElevators[elevatorNumber].mElevatorPosition;
     }
 
     @Override
-    public int getElevatorSpeed(int elevatorNumber) throws RemoteException {
+    public int getElevatorSpeed(int elevatorNumber) {
         return mElevators[elevatorNumber].mElevatorSpeed;
     }
 
     @Override
-    public int getElevatorWeight(int elevatorNumber) throws RemoteException {
+    public int getElevatorWeight(int elevatorNumber) {
         return mElevators[elevatorNumber].mElevatorWeight;
     }
 
     @Override
-    public int getElevatorCapacity(int elevatorNumber) throws RemoteException {
+    public int getElevatorCapacity(int elevatorNumber) {
         return mElevators[elevatorNumber].mElevatorCapacity;
     }
 
     @Override
-    public boolean getFloorButtonDown(int floor) throws RemoteException {
+    public boolean getFloorButtonDown(int floor) {
         return mFloors[floor].mFloorButtonDOWN;
     }
 
     @Override
-    public boolean getFloorButtonUp(int floor) throws RemoteException {
+    public boolean getFloorButtonUp(int floor) {
         return mFloors[floor].mFloorButtonUP;
     }
 
     @Override
-    public int getFloorHeight() throws RemoteException {
+    public int getFloorHeight() {
         return mFloorHeight;
     }
 
     @Override
     public int getFloorNum() throws RemoteException {
-        if(shouldThrowRemoteException) throw new RemoteException();
         return mFloors.length;
     }
 
     @Override
-    public boolean getServicesFloors(int elevatorNumber, int floor) throws RemoteException {
+    public boolean getServicesFloors(int elevatorNumber, int floor) {
         return mElevators[elevatorNumber].mServiceFloors[floor] != null;
     }
 
     @Override
-    public int getTarget(int elevatorNumber) throws RemoteException {
+    public int getTarget(int elevatorNumber) {
         return mElevators[elevatorNumber].mTarget;
     }
 
     @Override
-    public void setCommittedDirection(int elevatorNumber, int direction) throws RemoteException {
+    public void setCommittedDirection(int elevatorNumber, int direction) {
         mElevators[elevatorNumber].mCommittedDirection = direction;
     }
 
     @Override
-    public void setServicesFloors(int elevatorNumber, int floor, boolean service) throws RemoteException {
+    public void setServicesFloors(int elevatorNumber, int floor, boolean service) {
         if(service) {
             mElevators[elevatorNumber].mServiceFloors[floor] = mFloors[floor];
         } else {
@@ -128,12 +125,12 @@ public class MockBuilding implements IElevator {
     }
 
     @Override
-    public void setTarget(int elevatorNumber, int target) throws RemoteException {
+    public void setTarget(int elevatorNumber, int target) {
         mElevators[elevatorNumber].mTarget = target;
     }
 
     @Override
-    public long getClockTick() throws RemoteException {
+    public long getClockTick() {
         return mClockTick;
     }
 
@@ -143,7 +140,7 @@ public class MockBuilding implements IElevator {
         public boolean mFloorButtonDOWN = false;
     }
 
-    public class MockElevator {
+    public static class MockElevator {
         public int mCommittedDirection = ELEVATOR_DIRECTION_UP;
         public int mElevatorAccel = 0;
         public int mElevatorDoorStatus = ELEVATOR_DOORS_CLOSED;
@@ -152,7 +149,7 @@ public class MockBuilding implements IElevator {
         public int mElevatorSpeed = 0;
         public int mElevatorWeight = 0;
         public int mElevatorCapacity = 15;
-        public int mTarget = 0;
+        public int mTarget = -1;
 
         public MockFloor[] mServiceFloors;
         public boolean[] MockFloorButtonPressed;

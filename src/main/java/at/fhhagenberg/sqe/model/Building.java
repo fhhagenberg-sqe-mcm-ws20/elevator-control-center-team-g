@@ -12,13 +12,13 @@ import java.util.List;
 public class Building {
 
 	// Floors
-	List<Floor> Floors = null;
+	private final List<Floor> mFloors;
 
 	// Elevators
-	List<Elevator> Elevators = null;
+	private final List<Elevator> mElevators;
 
 	// stored data that is the same for all floors/elevators
-	private int Floorheight = 0;
+	private final int mFloorheight;
 
 	/**
 	 * <p>Constructor for Building.</p>
@@ -28,15 +28,15 @@ public class Building {
 	 * @param floorheight a int.
 	 */
 	public Building(int nrOfFloors, int nrOfElevators, int floorheight) {
-		Floors = new ArrayList<Floor>(nrOfFloors);
-		Elevators = new ArrayList<Elevator>(nrOfElevators);
-		Floorheight = floorheight;
+		mFloors = new ArrayList<>(nrOfFloors);
+		mElevators = new ArrayList<>(nrOfElevators);
+		mFloorheight = floorheight;
 
 		for(int i = 0; i < nrOfElevators; i++) {
-			Elevators.add(new Elevator());
+			mElevators.add(new Elevator());
 		}
 		for(int i = 0; i < nrOfFloors; i++) {
-			Floors.add(new Floor());
+			mFloors.add(new Floor());
 		}
 	}
 
@@ -46,7 +46,7 @@ public class Building {
 	 * @return the floorheight
 	 */
 	public int getFloorheight() {
-		return Floorheight;
+		return mFloorheight;
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class Building {
 	 * @return Floor you want to get
 	 */
 	public Floor getFloor(int num) {
-		return Floors.get(num);
+		return mFloors.get(num);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Building {
 	 * @return elevator you want to get
 	 */
 	public Elevator getElevator(int num) {
-		return Elevators.get(num);
+		return mElevators.get(num);
 	}
 	
 	/**
@@ -75,7 +75,7 @@ public class Building {
 	 * @return number of floors
 	 */
 	public int getNrOfFloors() {
-		return Floors.size();
+		return mFloors.size();
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class Building {
 	 * @return number of Elevators
 	 */
 	public int getNrOfElevators() {
-		return Elevators.size();
+		return mElevators.size();
 	}
 	
 	

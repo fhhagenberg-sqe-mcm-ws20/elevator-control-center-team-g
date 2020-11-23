@@ -1,9 +1,6 @@
 package at.fhhagenberg.sqe.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * <p>Elevator class.</p>
@@ -25,10 +22,10 @@ public class Elevator {
 	private int target = Integer.MAX_VALUE;
 	
 	// List of serviced floors
-	private HashSet<Floor> ServicedFloors = new HashSet<Floor>();
-	
+	private final HashSet<Floor> ServicedFloors = new HashSet<>();
+
 	// List of pressed buttons
-	private HashSet<Integer> PressedButtons = new HashSet<Integer>();
+	private final HashSet<Integer> PressedButtons = new HashSet<>();
 	
 	/**
 	 * <p>AddPressedButton.</p>
@@ -252,7 +249,7 @@ public class Elevator {
 	 * @param target the target to set
 	 */
 	public void setTarget(int target) {
-		if(IsServicedFloor(target)) this.target = target;
+		if(IsServicedFloor(target) || target == -1) this.target = target;
 		else throw new IllegalArgumentException("Target was not valid!");
 	}
 

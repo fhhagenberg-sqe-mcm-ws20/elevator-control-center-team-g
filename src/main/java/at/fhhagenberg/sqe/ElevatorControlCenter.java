@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqe;
 
 import at.fhhagenberg.sqe.model.Building;
+import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import sqelevator.IElevator;
 
 import java.rmi.RemoteException;
@@ -14,12 +15,11 @@ import java.rmi.RemoteException;
 public class ElevatorControlCenter {
 
 	// for getting data from actual elevator
-	private IElevator elevatorApi;
-
-
+	// we don't need that for now
+	// private IElevator elevatorApi;
 
 	// Model that contains all the data
-	private Building building;
+	private Building mBuilding;
 
 
 	/**
@@ -27,7 +27,7 @@ public class ElevatorControlCenter {
 	 *
 	 * @param ElevatorSystem a {@link sqelevator.IElevator} object.
 	 * @throws java.rmi.RemoteException if any.
-	 * @throws at.fhhagenberg.sqe.ClockTickChangeException if any.
+	 * @throws at.fhhagenberg.sqe.util.ClockTickChangeException if any.
 	 */
 	public void update(IElevator ElevatorSystem) throws RemoteException, ClockTickChangeException {
 		long currentTick = ElevatorSystem.getClockTick();
@@ -68,7 +68,7 @@ public class ElevatorControlCenter {
 		// Check if everything was refreshed in one tick
 		// throw everything away if it was not
 		if (currentTick == ElevatorSystem.getClockTick()) {
-			building = newbuilding;
+			mBuilding = newbuilding;
 
 		}else {
 			throw new ClockTickChangeException("Clock Tick changed during operation!");
@@ -82,7 +82,7 @@ public class ElevatorControlCenter {
 	 * @return a {@link at.fhhagenberg.sqe.model.Building} object.
 	 */
 	public Building getBuilding() {
-		return building;
+		return mBuilding;
 	}
 
 }

@@ -1,7 +1,5 @@
 package at.fhhagenberg.sqe;
 
-import java.rmi.RemoteException;
-
 public class MockBuildingWithClockTick extends MockBuilding {
 
     private long mClockTick = 15;
@@ -11,7 +9,7 @@ public class MockBuildingWithClockTick extends MockBuilding {
     }
 
     @Override
-    public long getClockTick() throws RemoteException {
+    public long getClockTick() {
         return mClockTick++;
     }
 }
