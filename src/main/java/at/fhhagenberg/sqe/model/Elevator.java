@@ -1,8 +1,6 @@
 package at.fhhagenberg.sqe.model;
 
 import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>Elevator class.</p>
@@ -57,10 +55,20 @@ public class Elevator {
 		return PressedButtons.contains(fl);
 	}
 	
+	/**
+	 * <p>GetPressedButtons.</p>
+	 *
+	 * @return a {@link java.util.HashSet} object.
+	 */
 	public HashSet<Integer> GetPressedButtons() {
 		return PressedButtons;
 	}
 	
+	/**
+	 * <p>GetServicedFloors.</p>
+	 *
+	 * @return a {@link java.util.HashSet} object.
+	 */
 	public HashSet<Floor> GetServicedFloors(){
 		return ServicedFloors;
 	}

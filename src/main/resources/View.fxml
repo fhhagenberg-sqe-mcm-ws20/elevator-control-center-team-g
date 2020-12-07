@@ -3,7 +3,6 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
 <VBox maxHeight="900.0" maxWidth="1080.0" minHeight="900.0" minWidth="1080.0" prefHeight="900.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhhagenberg.sqe.view.View">

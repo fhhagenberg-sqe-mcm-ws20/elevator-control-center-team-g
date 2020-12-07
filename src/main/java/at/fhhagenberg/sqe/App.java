@@ -28,9 +28,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
-import java.util.ArrayList;
+
 import java.util.HashSet;
-import java.util.List;
 
 /**
  * <p>
@@ -47,7 +46,7 @@ public class App extends Application {
 
 	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
 
-	private IElevator mElevatorSystem;
+	private final IElevator mElevatorSystem;
 
 	private final String OurOrange = "#ff8c00";
 
@@ -78,14 +77,6 @@ public class App extends Application {
 		Building building = ecc.getBuilding();
 		InitFromBuilding(building);
 		UpdateFromBuilding(building);
-
-//        AddElevator(1);
-//        AddElevator(2);
-//        AddElevator(3);
-//
-//        setElevatorFloor(3,1,true);
-//        setTargetFloor(2,2);
-//        setTargetFloor(1,1);
 	}
 
 	/**
@@ -99,7 +90,6 @@ public class App extends Application {
 		AddFloors(building.getNrOfFloors());
 		// Create GUI for each elevator
 		for (int i = 0; i < building.getNrOfElevators(); i++) {
-			Elevator thisElev = building.getElevator(i);
 			AddElevator(building.getNrOfFloors());
 		}
 	}
@@ -123,10 +113,10 @@ public class App extends Application {
 			for (int j = 0; j < building.getNrOfFloors(); j++) {
 				setFloorService(i, j, thisElev.IsServicedFloor(j));
 			}
-			// show comitted direction of elevator
-			ShowComittedDirection(i+1, thisElev.getDirection());
+			// show committed direction of elevator
+			ShowCommittedDirection(i+1, thisElev.getDirection());
 			// show speed and acceleration and weight and capacity of elevator
-			ShowElevatorStats(i+1, thisElev.getSpeed(), thisElev.getWeight(), thisElev.getCapacity(), thisElev.getAcceleration());
+			ShowElevatorStats(i+1, thisElev.getSpeed(), thisElev.getWeight(), thisElev.getAcceleration());
 			// show which buttons in this elevator are pressed
 			ShowElevatorButtonsPressed(i+1, thisElev.GetPressedButtons(), thisElev.GetServicedFloors());
 		}
@@ -150,7 +140,7 @@ public class App extends Application {
 	}
 	
 	
-	private void ShowElevatorStats(int elevatornr, int speed, int weight, int capacity, int acceleration){
+	private void ShowElevatorStats(int elevatornr, int speed, int weight, int acceleration){
 		// get label
 		Label stats = (Label) scene.lookup("#Elevator" + elevatornr + "Stats");
 		// set updated data
@@ -158,12 +148,12 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>ShowComittedDirection.</p>
+	 * <p>ShowCommittedDirection.</p>
 	 *
 	 * @param elevatornr a int.
 	 * @param direction a int.
 	 */
-	private void ShowComittedDirection(int elevatornr, int direction) {
+	private void ShowCommittedDirection(int elevatornr, int direction) {
 		// get the arrows
 		SVGPath dirdown = (SVGPath) scene.lookup("#Elevator" + elevatornr + "DirDown");
 		SVGPath dirup = (SVGPath) scene.lookup("#Elevator" + elevatornr + "DirUp");
@@ -224,9 +214,6 @@ public class App extends Application {
 	 * @param NrOfFloors a int.
 	 */
 	private void AddFloors(int NrOfFloors) {
-		// get the part of the UI that contains all floors
-		VBox Floors = (VBox) scene.lookup("#Floors");
-
 		// add Floors
 		for (int i = 0; i < NrOfFloors; i++) {
 			// Calc number of floor (floors have to be added with highest first)
