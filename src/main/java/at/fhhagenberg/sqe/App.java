@@ -370,13 +370,13 @@ public class App extends Application {
 			if (!cb1.isDisabled()) {
 				int selected = cb1.getValue() - 1;
 				try {
-					setElevatorFloor(elevatornum, selected, 2);
+					setElevatorFloor(elevatornum, selected, IElevator.ELEVATOR_DOORS_CLOSED);
 				} catch (Exception e) {
-					e.printStackTrace();
+					writeToConsole(e.getMessage());
 				}
 			}
 		});
-		setElevatorFloor(elevatornum, 0, 2);
+		setElevatorFloor(elevatornum, 0, IElevator.ELEVATOR_DOORS_CLOSED);
 	}
 
 	/**

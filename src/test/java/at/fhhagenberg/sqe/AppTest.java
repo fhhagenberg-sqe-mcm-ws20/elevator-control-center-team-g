@@ -11,6 +11,7 @@ import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.LabeledMatchers;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
 
@@ -71,8 +72,66 @@ public class AppTest {
 	 */
 	@Test
 	public void testButtonWithText(FxRobot robot) throws InterruptedException {
-		// FxAssert.verifyThat(".button", LabeledMatchers.hasText("Click me!"));
 		TimeUnit.SECONDS.sleep(10);
 	}
+
+	/**
+	 * @param robot - Will be injected by the test runner.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testButtonAutoToManual(FxRobot robot) throws InterruptedException {
+		// check that it has the initial state
+		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Automatic"));
+
+		// click on toggle button
+		robot.clickOn("#ToggleButtonElevator1");
+
+		// check that the togglebutton has changed
+		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Manual"));
+	}
+
+	/**
+	 * @param robot - Will be injected by the test runner.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testButtonAutoToManualToAuto(FxRobot robot) throws InterruptedException {
+		// check that it has the initial state
+		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Automatic"));
+
+		// click on toggle button
+		robot.clickOn("#ToggleButtonElevator1");
+
+		// check that the togglebutton has changed
+		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Manual"));
+
+		// click on toggle button
+		robot.clickOn("#ToggleButtonElevator1");
+
+		// check that the togglebutton has changed
+		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Automatic"));
+	}
+	
+	/**
+	 * @param robot - Will be injected by the test runner.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testManuallySetFloorWithChoicebox(FxRobot robot) throws InterruptedException {
+		// check that it has the initial state
+		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Automatic"));
+
+		// click on toggle button
+		robot.clickOn("#ToggleButtonElevator1");
+
+		// check that the togglebutton has changed
+		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Manual"));
+		
+		// click on a floor
+		robot.clickOn("#ChoiceBoxElevator1").clickOn(LabeledMatchers.hasText("2"));
+		
+	}
+	
 
 }
