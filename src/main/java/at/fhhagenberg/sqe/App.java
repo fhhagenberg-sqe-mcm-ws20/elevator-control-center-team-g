@@ -2,6 +2,7 @@ package at.fhhagenberg.sqe;
 
 import at.fhhagenberg.sqe.model.Building;
 import at.fhhagenberg.sqe.model.Elevator;
+import at.fhhagenberg.sqe.model.Floor;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +28,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * <p>
@@ -121,6 +125,10 @@ public class App extends Application {
 			}
 			// show comitted direction of elevator
 			ShowComittedDirection(i+1, thisElev.getDirection());
+			// show speed and acceleration and weight and capacity of elevator
+			ShowElevatorStats(i+1, thisElev.getSpeed(), thisElev.getWeight(), thisElev.getCapacity(), thisElev.getAcceleration());
+			// show which buttons in this elevator are pressed
+			ShowElevatorButtonsPressed(i+1, thisElev.GetPressedButtons(), thisElev.GetServicedFloors());
 		}
 
 		// update all Floors
@@ -129,6 +137,24 @@ public class App extends Application {
 			setButtonUpColor(j, building.getFloor(j).isButtonUpPressed());
 			setButtonDownColor(j, building.getFloor(j).isButtonDownPressed());
 		}
+	}
+	
+	
+	private void ShowElevatorButtonsPressed(int elevatornr, HashSet<Integer> PressedButtons, HashSet<Floor> ServicedFloors){
+		for (Floor fl : ServicedFloors) {
+			if(PressedButtons.contains(fl.getFloorNumber())) {
+				Circle circle = (Circle) scene.lookup("#Indicator" + elevatornr + "-" + (fl.getFloorNumber()+1));
+				circle.setStroke(Paint.valueOf("LIGHTGREEN"));
+			}	
+		}
+	}
+	
+	
+	private void ShowElevatorStats(int elevatornr, int speed, int weight, int capacity, int acceleration){
+		// get label
+		Label stats = (Label) scene.lookup("#Elevator" + elevatornr + "Stats");
+		// set updated data
+		stats.setText(speed + "f/s|" + acceleration + "f/s^2|" + weight + "lbs");
 	}
 
 	/**
@@ -285,7 +311,7 @@ public class App extends Application {
 		lab.setId("LabelElevator" + elevatornum);
 		lab.setText("Elevator " + elevatornum);
 
-		// set ID to correct number
+		// set IDs to correct number
 		GridPane gp = (GridPane) scene.lookup("#GridpaneElevatorNew");
 		gp.setId("GridpaneElevator" + elevatornum);
 
@@ -303,6 +329,9 @@ public class App extends Application {
 		
 		SVGPath dirDown = (SVGPath) scene.lookup("#ElevatorDirDownNew");
 		dirDown.setId("Elevator" + elevatornum + "DirDown");
+		
+		Label stats = (Label) scene.lookup("#ElevatorStatsNew");
+		stats.setId("Elevator" + elevatornum + "Stats");
 
 		// To apply all new IDs to respecting elements
 		scene.getRoot().applyCss();

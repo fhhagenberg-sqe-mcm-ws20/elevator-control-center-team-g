@@ -50,6 +50,7 @@ public class ElevatorControlCenter {
 		for (int i = 0; i < newbuilding.getNrOfElevators(); i++) {
 			for(int j = 0; j < newbuilding.getNrOfFloors(); j++) {
 				if(ElevatorSystem.getServicesFloors(i,j)) newbuilding.getElevator(i).AddServicedFloor(newbuilding.getFloor(j));
+				if(ElevatorSystem.getElevatorButton(i, j)) newbuilding.getElevator(i).AddPressedButton(j);
 			}
 
 			newbuilding.getElevator(i).setDirection(ElevatorSystem.getCommittedDirection(i));
