@@ -29,6 +29,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
 
+import java.rmi.Naming;
 import java.util.HashSet;
 
 /**
@@ -57,6 +58,11 @@ public class App extends Application {
 	 */
 	public App(IElevator ElevatorSystem) {
 		mElevatorSystem = ElevatorSystem;
+	}
+
+	public static void main(String[] args) throws Exception{
+		IElevator controller = (IElevator) Naming.lookup("rmi://localhost:15099/ElevatorSim");
+		App app = new App(controller);
 	}
 
 	/** {@inheritDoc} */
