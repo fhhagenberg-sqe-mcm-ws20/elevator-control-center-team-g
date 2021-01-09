@@ -40,6 +40,9 @@ public class AppTest {
 		mockBuilding.setServicesFloors(1, 2, true);
 		mockBuilding.setServicesFloors(2, 0, true);
 		mockBuilding.setServicesFloors(2, 1, true);
+		mockBuilding.setServicesFloors(3, 0, true);
+		mockBuilding.setServicesFloors(3, 1, true);
+		mockBuilding.setServicesFloors(3, 2, true);
 		// for CodeCoverage
 		mockBuilding.setServicesFloors(2, 2, false);
 
@@ -135,6 +138,82 @@ public class AppTest {
 
 		// check that it has been set in the backend
 		assertEquals(1, mockBuilding.mElevators[0].mTarget);
+	}
+	
+	/**
+	 * @param robot - Will be injected by the test runner.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testCommittedDirectionUp(FxRobot robot) throws InterruptedException {
+		// check that it has the initial state
+		FxAssert.verifyThat("#ToggleButtonElevator4", LabeledMatchers.hasText("Automatic"));
+
+		// click on toggle button
+		robot.clickOn("#ToggleButtonElevator4");
+
+		// check that the togglebutton has changed
+		FxAssert.verifyThat("#ToggleButtonElevator4", LabeledMatchers.hasText("Manual"));
+
+		// click on a floor
+		robot.clickOn("#ChoiceBoxElevator4").clickOn(LabeledMatchers.hasText("2"));
+
+		// wait for update
+		TimeUnit.SECONDS.sleep(2);
+	}
+	
+	/**
+	 * @param robot - Will be injected by the test runner.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testCommittedDirectionDown(FxRobot robot) throws InterruptedException {
+		mockBuilding.mElevators[3].mElevatorFloor = 1;
+		
+		// wait for update
+		TimeUnit.SECONDS.sleep(2);
+		
+		// check that it has the initial state
+		FxAssert.verifyThat("#ToggleButtonElevator4", LabeledMatchers.hasText("Automatic"));
+
+		// click on toggle button
+		robot.clickOn("#ToggleButtonElevator4");
+
+		// check that the togglebutton has changed
+		FxAssert.verifyThat("#ToggleButtonElevator4", LabeledMatchers.hasText("Manual"));
+
+		// click on a floor
+		robot.clickOn("#ChoiceBoxElevator4").clickOn(LabeledMatchers.hasText("1"));
+
+		// wait for update
+		TimeUnit.SECONDS.sleep(2);
+	}
+	
+	/**
+	 * @param robot - Will be injected by the test runner.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testCommittedDirectionUncom(FxRobot robot) throws InterruptedException {
+		mockBuilding.mElevators[3].mElevatorFloor = 1;
+		
+		// wait for update
+		TimeUnit.SECONDS.sleep(2);
+		
+		// check that it has the initial state
+		FxAssert.verifyThat("#ToggleButtonElevator4", LabeledMatchers.hasText("Automatic"));
+
+		// click on toggle button
+		robot.clickOn("#ToggleButtonElevator4");
+
+		// check that the togglebutton has changed
+		FxAssert.verifyThat("#ToggleButtonElevator4", LabeledMatchers.hasText("Manual"));
+
+		// click on a floor
+		robot.clickOn("#ChoiceBoxElevator4").clickOn(LabeledMatchers.hasText("2"));
+
+		// wait for update
+		TimeUnit.SECONDS.sleep(2);
 	}
 
 	/**

@@ -120,11 +120,6 @@ public class App extends Application {
 
 	}
 
-	public void Refresh() throws Exception {
-		ecc.update(mElevatorSystem);
-		UpdateFromBuilding(ecc.getBuilding());
-	}
-
 	/**
 	 * <p>
 	 * InitFromBuilding.
