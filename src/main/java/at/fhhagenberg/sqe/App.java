@@ -122,7 +122,9 @@ public class App extends Application {
 		};
 
 		task.setOnSucceeded(e -> {
-			mElevatorSystem = task.getValue();
+
+			if(!isMock)
+				mElevatorSystem = task.getValue();
 
 			while (true) {
 				try {
@@ -135,49 +137,40 @@ public class App extends Application {
 					// retry
 				}
 			}
-
-			while (true) {
-				try {
-					// update in thread. dont quite know why, but this is needed
-					Thread thread = new Thread() {
-						@Override
-						public void run() {
-							while (true) {
-								try {
-									// update
-									ecc.update(mElevatorSystem);
-									Platform.runLater(() -> {
-										while (true) {
-											try {
-												UpdateFromBuilding(ecc.getBuilding());
-												break;
-											} catch (Exception e) {
-												// reconnect and retry
-												writeToConsole("Connection to Elevator lost, trying to reconnect");
-												Connect();
-											}
-										}
-									});
-									// wait a bit
-									Thread.sleep(1000);
-								} catch (Exception e) {
-									// reconnect and retry
-									writeToConsole("Connection to Elevator lost, trying to reconnect");
-									Connect();
+			// update in thread. dont quite know why, but this is needed
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							// update
+							ecc.update(mElevatorSystem);
+							Platform.runLater(() -> {
+								while (true) {
+									try {
+										UpdateFromBuilding(ecc.getBuilding());
+										break;
+									} catch (Exception e) {
+										// reconnect and retry
+										writeToConsole("Connection to Elevator lost, trying to reconnect");
+										if(!isMock)
+											Connect();
+									}
 								}
-							}
+							});
+							// wait a bit
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							// reconnect and retry
+							writeToConsole("Connection to Elevator lost, trying to reconnect");
+							if(!isMock)
+								Connect();
 						}
-					};
-					thread.setDaemon(true);
-					thread.start();
-
-					break;
-				} catch (Exception e1) {
-					// reconnect and retry
-					writeToConsole("Connection to Elevator lost, trying to reconnect");
-					Connect();
+					}
 				}
-			}
+			};
+			thread.setDaemon(true);
+			thread.start();
 		});
 
 		new Thread(task).start();
@@ -600,6 +593,10 @@ public class App extends Application {
 	private void writeToConsole(String text) {
 		console.setText(console.getText() + System.lineSeparator() + text);
 
+	}
+
+	public String getTextFromConsole() {
+		return console.getText();
 	}
 
 	/**
