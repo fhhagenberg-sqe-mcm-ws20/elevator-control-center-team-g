@@ -72,10 +72,16 @@ public class App extends Application {
 		isMock = true;
 	}
 
-	public App() throws RemoteException, NotBoundException, MalformedURLException {
+	/**
+	 * <p>Constructor for App.</p>
+	 */
+	public App(){}
 
-	}
-
+	/**
+	 * <p>Connect.</p>
+	 *
+	 * @return a {@link sqelevator.IElevator} object.
+	 */
 	public IElevator Connect() {
 		while (true) {
 			try {
@@ -153,8 +159,7 @@ public class App extends Application {
 									} catch (Exception e) {
 										// reconnect and retry
 										writeToConsole("Connection to Elevator lost, trying to reconnect");
-										if(!isMock)
-											Connect();
+										Connect();
 									}
 								}
 							});
@@ -163,8 +168,7 @@ public class App extends Application {
 						} catch (Exception e) {
 							// reconnect and retry
 							writeToConsole("Connection to Elevator lost, trying to reconnect");
-							if(!isMock)
-								Connect();
+							Connect();
 						}
 					}
 				}
@@ -595,6 +599,11 @@ public class App extends Application {
 
 	}
 
+	/**
+	 * <p>getTextFromConsole.</p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
 	public String getTextFromConsole() {
 		return console.getText();
 	}

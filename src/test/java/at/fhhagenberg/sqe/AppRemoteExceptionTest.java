@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqe;
 
 
+import javafx.concurrent.Task;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,9 @@ import org.testfx.framework.junit5.Start;
 import org.testfx.matcher.control.LabeledMatchers;
 import sqelevator.IElevator;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,6 +67,29 @@ public class AppRemoteExceptionTest {
 
         app = new App(mockBuilding);
         app.start(stage);
+    }
+
+    @Test
+    public void testInitialConnect() throws InterruptedException {
+        App testApp = new App();
+
+        app.isMock = false;
+
+        Task<IElevator> task = new Task<IElevator>() {
+            @Override
+            protected IElevator call() throws Exception {
+                return app.Connect();
+            }
+        };
+
+        task.setOnSucceeded( e -> {
+
+        });
+        new Thread(task).start();
+
+
+        TimeUnit.SECONDS.sleep(2);
+        app.isMock = true;
     }
 
     /*@Test
