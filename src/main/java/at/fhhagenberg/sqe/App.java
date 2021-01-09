@@ -2,7 +2,10 @@ package at.fhhagenberg.sqe;
 
 import at.fhhagenberg.sqe.model.Building;
 import at.fhhagenberg.sqe.model.Elevator;
+import at.fhhagenberg.sqe.model.Floor;
+import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +31,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.HashSet;
+
 /**
  * <p>
  * App class.
@@ -43,17 +52,24 @@ public class App extends Application {
 
 	private final ElevatorControlCenter ecc = new ElevatorControlCenter();
 
-	private IElevator mElevatorSystem;
+	private IElevator mElevatorSystem = null;
 
 	private final String OurOrange = "#ff8c00";
 
 	/**
-	 * <p>Constructor for App.</p>
+	 * <p>
+	 * Constructor for App.
+	 * </p>
 	 *
 	 * @param ElevatorSystem a {@link sqelevator.IElevator} object.
 	 */
 	public App(IElevator ElevatorSystem) {
 		mElevatorSystem = ElevatorSystem;
+	}
+
+	public App() throws RemoteException, NotBoundException, MalformedURLException {
+		IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
+		mElevatorSystem = controller;
 	}
 
 	/** {@inheritDoc} */
@@ -75,17 +91,39 @@ public class App extends Application {
 		InitFromBuilding(building);
 		UpdateFromBuilding(building);
 
-//        AddElevator(1);
-//        AddElevator(2);
-//        AddElevator(3);
-//
-//        setElevatorFloor(3,1,true);
-//        setTargetFloor(2,2);
-//        setTargetFloor(1,1);
+		// update in thread
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						// update
+						ecc.update(mElevatorSystem);
+						Platform.runLater(() -> {
+							try {
+								UpdateFromBuilding(ecc.getBuilding());
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						});
+						// wait a bit
+						Thread.sleep(1000);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+
 	}
 
 	/**
-	 * <p>InitFromBuilding.</p>
+	 * <p>
+	 * InitFromBuilding.
+	 * </p>
 	 *
 	 * @param building a {@link at.fhhagenberg.sqe.model.Building} object.
 	 * @throws java.lang.Exception if any.
@@ -95,13 +133,14 @@ public class App extends Application {
 		AddFloors(building.getNrOfFloors());
 		// Create GUI for each elevator
 		for (int i = 0; i < building.getNrOfElevators(); i++) {
-			Elevator thisElev = building.getElevator(i);
 			AddElevator(building.getNrOfFloors());
 		}
 	}
 
 	/**
-	 * <p>UpdateFromBuilding.</p>
+	 * <p>
+	 * UpdateFromBuilding.
+	 * </p>
 	 *
 	 * @param building a {@link at.fhhagenberg.sqe.model.Building} object.
 	 * @throws java.lang.Exception if any.
@@ -119,8 +158,12 @@ public class App extends Application {
 			for (int j = 0; j < building.getNrOfFloors(); j++) {
 				setFloorService(i, j, thisElev.IsServicedFloor(j));
 			}
-			// show comitted direction of elevator
-			ShowComittedDirection(i+1, thisElev.getDirection());
+			// show committed direction of elevator
+			ShowCommittedDirection(i + 1, thisElev.getDirection());
+			// show speed and acceleration and weight and capacity of elevator
+			ShowElevatorStats(i + 1, thisElev.getSpeed(), thisElev.getWeight(), thisElev.getAcceleration());
+			// show which buttons in this elevator are pressed
+			ShowElevatorButtonsPressed(i + 1, thisElev.GetPressedButtons(), thisElev.GetServicedFloors());
 		}
 
 		// update all Floors
@@ -131,17 +174,36 @@ public class App extends Application {
 		}
 	}
 
+	private void ShowElevatorButtonsPressed(int elevatornr, HashSet<Integer> PressedButtons,
+			HashSet<Floor> ServicedFloors) {
+		for (Floor fl : ServicedFloors) {
+			if (PressedButtons.contains(fl.getFloorNumber())) {
+				Circle circle = (Circle) scene.lookup("#Indicator" + elevatornr + "-" + (fl.getFloorNumber() + 1));
+				circle.setStroke(Paint.valueOf("LIGHTGREEN"));
+			}
+		}
+	}
+
+	private void ShowElevatorStats(int elevatornr, int speed, int weight, int acceleration) {
+		// get label
+		Label stats = (Label) scene.lookup("#Elevator" + elevatornr + "Stats");
+		// set updated data
+		stats.setText(speed + "f/s|" + acceleration + "f/s^2|" + weight + "lbs");
+	}
+
 	/**
-	 * <p>ShowComittedDirection.</p>
+	 * <p>
+	 * ShowCommittedDirection.
+	 * </p>
 	 *
 	 * @param elevatornr a int.
-	 * @param direction a int.
+	 * @param direction  a int.
 	 */
-	private void ShowComittedDirection(int elevatornr, int direction) {
+	private void ShowCommittedDirection(int elevatornr, int direction) {
 		// get the arrows
 		SVGPath dirdown = (SVGPath) scene.lookup("#Elevator" + elevatornr + "DirDown");
 		SVGPath dirup = (SVGPath) scene.lookup("#Elevator" + elevatornr + "DirUp");
-		
+
 		// color arrows according to committed direction of the elevator
 		switch (direction) {
 		case IElevator.ELEVATOR_DIRECTION_UNCOMMITTED:
@@ -163,9 +225,11 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>setButtonUpColor.</p>
+	 * <p>
+	 * setButtonUpColor.
+	 * </p>
 	 *
-	 * @param floornr a int.
+	 * @param floornr   a int.
 	 * @param isPressed a {@link java.lang.Boolean} object.
 	 */
 	private void setButtonUpColor(int floornr, Boolean isPressed) {
@@ -178,9 +242,11 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>setButtonDownColor.</p>
+	 * <p>
+	 * setButtonDownColor.
+	 * </p>
 	 *
-	 * @param floornr a int.
+	 * @param floornr   a int.
 	 * @param isPressed a {@link java.lang.Boolean} object.
 	 */
 	private void setButtonDownColor(int floornr, Boolean isPressed) {
@@ -193,14 +259,13 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>AddFloors.</p>
+	 * <p>
+	 * AddFloors.
+	 * </p>
 	 *
 	 * @param NrOfFloors a int.
 	 */
 	private void AddFloors(int NrOfFloors) {
-		// get the part of the UI that contains all floors
-		VBox Floors = (VBox) scene.lookup("#Floors");
-
 		// add Floors
 		for (int i = 0; i < NrOfFloors; i++) {
 			// Calc number of floor (floors have to be added with highest first)
@@ -258,13 +323,16 @@ public class App extends Application {
 			arrows.setAlignment(Pos.CENTER);
 
 			ArrowDown.setOnMouseClicked(event -> ArrowDown.setFill(Paint.valueOf("#ff8c00")));
+			ArrowUp.setOnMouseClicked(event -> ArrowUp.setFill(Paint.valueOf("#ff8c00")));
 		}
 		// refresh UI
 		scene.getRoot().applyCss();
 	}
 
 	/**
-	 * <p>AddElevator.</p>
+	 * <p>
+	 * AddElevator.
+	 * </p>
 	 *
 	 * @param amountFloors a int.
 	 * @throws java.lang.Exception if any.
@@ -285,7 +353,7 @@ public class App extends Application {
 		lab.setId("LabelElevator" + elevatornum);
 		lab.setText("Elevator " + elevatornum);
 
-		// set ID to correct number
+		// set IDs to correct number
 		GridPane gp = (GridPane) scene.lookup("#GridpaneElevatorNew");
 		gp.setId("GridpaneElevator" + elevatornum);
 
@@ -297,12 +365,15 @@ public class App extends Application {
 		ChoiceBox<Integer> cb = (ChoiceBox<Integer>) scene.lookup("#ChoiceBoxElevatorNew");
 		cb.setId("ChoiceBoxElevator" + elevatornum);
 		cb.setDisable(true);
-		
+
 		SVGPath dirUp = (SVGPath) scene.lookup("#ElevatorDirUpNew");
 		dirUp.setId("Elevator" + elevatornum + "DirUp");
-		
+
 		SVGPath dirDown = (SVGPath) scene.lookup("#ElevatorDirDownNew");
 		dirDown.setId("Elevator" + elevatornum + "DirDown");
+
+		Label stats = (Label) scene.lookup("#ElevatorStatsNew");
+		stats.setId("Elevator" + elevatornum + "Stats");
 
 		// To apply all new IDs to respecting elements
 		scene.getRoot().applyCss();
@@ -341,20 +412,30 @@ public class App extends Application {
 			if (!cb1.isDisabled()) {
 				int selected = cb1.getValue() - 1;
 				try {
-					setElevatorFloor(elevatornum, selected, 2);
+					mElevatorSystem.setTarget(elevatornum-1, selected);
+					int currentfloor = ecc.getBuilding().getElevator(elevatornum-1).getCurrentFloor();
+					if(currentfloor > selected) {
+						mElevatorSystem.setCommittedDirection(elevatornum-1, IElevator.ELEVATOR_DIRECTION_DOWN);
+					}else if(currentfloor < selected) {
+						mElevatorSystem.setCommittedDirection(elevatornum-1, IElevator.ELEVATOR_DIRECTION_UP);
+					}if(currentfloor == selected) {
+						mElevatorSystem.setCommittedDirection(elevatornum-1, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					writeToConsole(e.getMessage());
 				}
 			}
 		});
-		setElevatorFloor(elevatornum, 0, 2);
+		setElevatorFloor(elevatornum, 0, IElevator.ELEVATOR_DOORS_CLOSED);
 	}
 
 	/**
-	 * <p>setFloorService.</p>
+	 * <p>
+	 * setFloorService.
+	 * </p>
 	 *
-	 * @param elevatornum a int.
-	 * @param floornum a int.
+	 * @param elevatornum    a int.
+	 * @param floornum       a int.
 	 * @param isToBeServiced a boolean.
 	 */
 	private void setFloorService(int elevatornum, int floornum, boolean isToBeServiced) {
@@ -367,10 +448,12 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>setTargetFloor.</p>
+	 * <p>
+	 * setTargetFloor.
+	 * </p>
 	 *
 	 * @param elevatornum a int.
-	 * @param floornum a int.
+	 * @param floornum    a int.
 	 */
 	private void setTargetFloor(int elevatornum, int floornum) {
 		// return if there is no target floor
@@ -389,11 +472,13 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>setElevatorFloor.</p>
+	 * <p>
+	 * setElevatorFloor.
+	 * </p>
 	 *
 	 * @param elevatornum a int.
-	 * @param floornum a int.
-	 * @param doorstatus a int.
+	 * @param floornum    a int.
+	 * @param doorstatus  a int.
 	 * @throws java.lang.Exception if any.
 	 */
 	private void setElevatorFloor(int elevatornum, int floornum, int doorstatus) throws Exception {
@@ -442,7 +527,9 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>writeToConsole.</p>
+	 * <p>
+	 * writeToConsole.
+	 * </p>
 	 *
 	 * @param text a {@link java.lang.String} object.
 	 */
@@ -451,11 +538,13 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>AddFloorNumber.</p>
+	 * <p>
+	 * AddFloorNumber.
+	 * </p>
 	 *
 	 * @param elevatornum a int.
-	 * @param rownum a int.
-	 * @param floornum a int.
+	 * @param rownum      a int.
+	 * @param floornum    a int.
 	 */
 	private void AddFloorNumber(int elevatornum, int rownum, int floornum) {
 		// Create circle around floor number

@@ -18,6 +18,11 @@
         </VBox.margin>
         <SVGPath id="ElevatorDirUpNew" content="M15 0 L7 20 L22 20 Z" fill="LIGHTGREY" stroke="BLACK" />
         <SVGPath id="ElevatorDirDownNew" content="M15 0 L7 20 L22 20 Z" fill="LIGHTGREY" rotate="180.0" stroke="BLACK" />
+		<Label id="ElevatorStatsNew" prefHeight="30.0" prefWidth="300.0" text="0km/h" textAlignment="CENTER">
+			<font>
+			  <Font size="15.0" />
+			</font>
+		</Label>
     </HBox>
     <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="215.0" prefWidth="215.0">
         <!-- <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="396.0" prefWidth="200.0">

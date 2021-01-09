@@ -56,6 +56,24 @@ public class Elevator {
 	}
 	
 	/**
+	 * <p>GetPressedButtons.</p>
+	 *
+	 * @return a {@link java.util.HashSet} object.
+	 */
+	public HashSet<Integer> GetPressedButtons() {
+		return PressedButtons;
+	}
+	
+	/**
+	 * <p>GetServicedFloors.</p>
+	 *
+	 * @return a {@link java.util.HashSet} object.
+	 */
+	public HashSet<Floor> GetServicedFloors(){
+		return ServicedFloors;
+	}
+	
+	/**
 	 * <p>AddServicedFloor.</p>
 	 *
 	 * @param fl pointer to floor to add

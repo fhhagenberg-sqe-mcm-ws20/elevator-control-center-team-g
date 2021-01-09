@@ -50,6 +50,7 @@ public class ElevatorControlCenter {
 		for (int i = 0; i < newbuilding.getNrOfElevators(); i++) {
 			for(int j = 0; j < newbuilding.getNrOfFloors(); j++) {
 				if(ElevatorSystem.getServicesFloors(i,j)) newbuilding.getElevator(i).AddServicedFloor(newbuilding.getFloor(j));
+				if(ElevatorSystem.getElevatorButton(i, j)) newbuilding.getElevator(i).AddPressedButton(j);
 			}
 
 			newbuilding.getElevator(i).setDirection(ElevatorSystem.getCommittedDirection(i));
@@ -62,7 +63,10 @@ public class ElevatorControlCenter {
 			newbuilding.getElevator(i).setCapacity(ElevatorSystem.getElevatorCapacity(i));
 			newbuilding.getElevator(i).setTarget(ElevatorSystem.getTarget(i));
 
-
+			// set direction to uncommitted if the elevator is at its target
+			if(newbuilding.getElevator(i).getTarget() == newbuilding.getElevator(i).getCurrentFloor()) {
+				ElevatorSystem.setCommittedDirection(i, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+			}
 		}
 
 		// Check if everything was refreshed in one tick
