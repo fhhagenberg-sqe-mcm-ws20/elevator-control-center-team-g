@@ -1,5 +1,7 @@
 package at.fhhagenberg.sqe;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
@@ -112,7 +114,7 @@ public class AppTest {
 		// check that the togglebutton has changed
 		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Automatic"));
 	}
-	
+
 	/**
 	 * @param robot - Will be injected by the test runner.
 	 * @throws InterruptedException
@@ -127,11 +129,30 @@ public class AppTest {
 
 		// check that the togglebutton has changed
 		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Manual"));
-		
+
 		// click on a floor
 		robot.clickOn("#ChoiceBoxElevator1").clickOn(LabeledMatchers.hasText("2"));
-		
+
+		// check that it has been set in the backend
+		assertEquals(1, mockBuilding.mElevators[0].mTarget);
 	}
-	
+
+	/**
+	 * @param robot - Will be injected by the test runner.
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testSetSpeedUpdate(FxRobot robot) throws InterruptedException {
+		// check that it has the initial state
+		FxAssert.verifyThat("#Elevator4Stats", LabeledMatchers.hasText("0" + "f/s|" + "0" + "f/s^2|" + "0" + "lbs"));
+
+		// change value in backend
+		mockBuilding.mElevators[3].mElevatorSpeed = 4711;
+		// wait for update
+		TimeUnit.SECONDS.sleep(2);
+
+		// check that it has changed
+		FxAssert.verifyThat("#Elevator4Stats", LabeledMatchers.hasText("4711" + "f/s|" + "0" + "f/s^2|" + "0" + "lbs"));
+	}
 
 }

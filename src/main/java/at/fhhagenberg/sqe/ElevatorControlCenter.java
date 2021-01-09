@@ -63,7 +63,10 @@ public class ElevatorControlCenter {
 			newbuilding.getElevator(i).setCapacity(ElevatorSystem.getElevatorCapacity(i));
 			newbuilding.getElevator(i).setTarget(ElevatorSystem.getTarget(i));
 
-
+			// set direction to uncommitted if the elevator is at its target
+			if(newbuilding.getElevator(i).getTarget() == newbuilding.getElevator(i).getCurrentFloor()) {
+				ElevatorSystem.setCommittedDirection(i, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+			}
 		}
 
 		// Check if everything was refreshed in one tick
