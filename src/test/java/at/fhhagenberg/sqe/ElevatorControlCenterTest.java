@@ -169,5 +169,13 @@ public class ElevatorControlCenterTest {
 
 		assertEquals(8, ecc.getBuilding().getElevator(0).getSpeed());
 	}
+	
+	// for code coverage only
+	@Test
+	public void testElevatorTargetISCurent() throws RemoteException, ClockTickChangeException {
+		mockBuilding.mElevators[2].mTarget = 1;
+		mockBuilding.mElevators[2].mElevatorFloor = 1;
+		ecc.update(mockBuilding);
+	}
 
 }
