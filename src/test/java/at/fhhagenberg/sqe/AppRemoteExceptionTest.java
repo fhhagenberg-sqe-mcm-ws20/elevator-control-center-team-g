@@ -3,6 +3,8 @@ package at.fhhagenberg.sqe;
 
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxAssert;
@@ -92,7 +94,8 @@ public class AppRemoteExceptionTest {
         app.isMock = true;
     }
 
-    /*@Test
+    @Test
+    @Disabled("Causes other tests to fail")
     public void testReconnect() throws InterruptedException {
         // check that it has the initial state
         FxAssert.verifyThat("#Elevator4Stats", LabeledMatchers.hasText("0" + "f/s|" + "0" + "f/s^2|" + "0" + "lbs"));
@@ -113,5 +116,5 @@ public class AppRemoteExceptionTest {
 
         FxAssert.verifyThat("#Elevator4Stats", LabeledMatchers.hasText("0" + "f/s|" + "0" + "f/s^2|" + "0" + "lbs"));
 
-    }*/
+    }
 }

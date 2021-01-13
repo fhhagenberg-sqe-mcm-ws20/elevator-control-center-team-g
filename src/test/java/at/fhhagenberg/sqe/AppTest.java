@@ -1,6 +1,7 @@
 package at.fhhagenberg.sqe;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.concurrent.TimeUnit;
 
@@ -124,6 +125,9 @@ public class AppTest {
 	 */
 	@Test
 	public void testManuallySetFloorWithChoicebox(FxRobot robot) throws InterruptedException {
+		// check that target is set to a floor thats not what we want to set it to
+		assertNotEquals(1, mockBuilding.mElevators[0].mTarget);
+		
 		// check that it has the initial state
 		FxAssert.verifyThat("#ToggleButtonElevator1", LabeledMatchers.hasText("Automatic"));
 
