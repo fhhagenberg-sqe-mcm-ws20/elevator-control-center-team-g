@@ -135,6 +135,7 @@ public class App extends Application {
 			if (!isMock)
 				mElevatorSystem = task.getValue();
 
+			// initial attempt to connect and build structure
 			while (true) {
 				try {
 					ecc.update(mElevatorSystem);
