@@ -9,8 +9,7 @@ TBD
 
 ### Instructions
 
-Run with XXXX.
-Start Simulator.
-Control Center connects to Simulator and starts displaying Elevators.
-Move Elevators in manual mode to collect passengers and deliver them to their destination
-
+Run with XXXX.  
+Start Simulator.  
+Control Center connects to Simulator and starts displaying Elevators.  
+Move Elevators in manual mode to collect passengers and deliver them to their destination.  
