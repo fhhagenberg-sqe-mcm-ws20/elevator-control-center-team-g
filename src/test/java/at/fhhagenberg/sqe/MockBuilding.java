@@ -66,7 +66,7 @@ public class MockBuilding implements IElevator {
     }
 
     @Override
-    public int getElevatorSpeed(int elevatorNumber) {
+    public int getElevatorSpeed(int elevatorNumber) throws RemoteException {
         return mElevators[elevatorNumber].mElevatorSpeed;
     }
 
@@ -96,7 +96,7 @@ public class MockBuilding implements IElevator {
     }
 
     @Override
-    public int getFloorNum() throws RemoteException {
+    public int getFloorNum(){
         return mFloors.length;
     }
 

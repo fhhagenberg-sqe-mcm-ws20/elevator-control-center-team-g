@@ -3,11 +3,11 @@ package at.fhhagenberg.sqe;
 import at.fhhagenberg.sqe.model.Building;
 import at.fhhagenberg.sqe.model.Elevator;
 import at.fhhagenberg.sqe.model.Floor;
-import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -30,12 +30,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
-
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -56,6 +53,11 @@ public class App extends Application {
 
 	private final String OurOrange = "#ff8c00";
 
+	boolean isMock = false;
+
+	Thread th1 = null;
+	Thread th2 = null;
+
 	/**
 	 * <p>
 	 * Constructor for App.
@@ -65,11 +67,43 @@ public class App extends Application {
 	 */
 	public App(IElevator ElevatorSystem) {
 		mElevatorSystem = ElevatorSystem;
+		isMock = true;
 	}
 
-	public App() throws RemoteException, NotBoundException, MalformedURLException {
-		IElevator controller = (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
-		mElevatorSystem = controller;
+	/**
+	 * <p>
+	 * Constructor for App.
+	 * </p>
+	 */
+	public App() {
+	}
+
+	/**
+	 * <p>
+	 * Connect.
+	 * </p>
+	 *
+	 * @return a {@link sqelevator.IElevator} object.
+	 */
+	public IElevator connect() {
+		while (true) {
+			try {
+				if (!isMock) {
+					writeToConsole("Connected to Elevator");
+					return (IElevator) Naming.lookup("rmi://localhost/ElevatorSim");
+				}
+				writeToConsole("Connected to Elevator");
+				break;
+			} catch (Exception e) {
+				writeToConsole("Failed to reconnect, retrying....");
+				try {
+					TimeUnit.MILLISECONDS.sleep(500);
+				} catch (InterruptedException e1) {
+					// retry immediately
+				}
+			}
+		}
+		return null;
 	}
 
 	/** {@inheritDoc} */
@@ -86,39 +120,87 @@ public class App extends Application {
 
 		console = (TextArea) scene.lookup("#txtConsole");
 
-		ecc.update(mElevatorSystem);
-		Building building = ecc.getBuilding();
-		InitFromBuilding(building);
-		UpdateFromBuilding(building);
+		writeToConsole("GUI started");
 
 		// update in thread
-		Thread thread = new Thread() {
+		Task<IElevator> task = new Task<IElevator>() {
 			@Override
-			public void run() {
-				while (true) {
-					try {
-						// update
-						ecc.update(mElevatorSystem);
-						Platform.runLater(() -> {
-							try {
-								UpdateFromBuilding(ecc.getBuilding());
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						});
-						// wait a bit
-						Thread.sleep(1000);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
+			public IElevator call() {
+				return connect();
 			}
 		};
-		thread.setDaemon(true);
-		thread.start();
 
+		task.setOnSucceeded(e -> {
+
+			if (!isMock)
+				mElevatorSystem = task.getValue();
+
+			while (true) {
+				try {
+					ecc.update(mElevatorSystem);
+					Building building = ecc.getBuilding();
+					InitFromBuilding(building);
+					UpdateFromBuilding(building);
+					break;
+				} catch (Exception e2) {
+					// retry
+				}
+			}
+			// update in thread. dont quite know why, but this is needed
+			th2 = new Thread() {
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							// update
+							ecc.update(mElevatorSystem);
+							Platform.runLater(() -> {
+								while (true) {
+									try {
+										UpdateFromBuilding(ecc.getBuilding());
+										break;
+									} catch (Exception e) {
+										// reconnect and retry
+										writeToConsole("Connection to Elevator lost, trying to reconnect");
+										connect();
+									}
+								}
+							});
+							// wait a bit
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							// reconnect and retry
+							writeToConsole("Connection to Elevator lost, trying to reconnect");
+							connect();
+						}
+					}
+				}
+			};
+			th2.setDaemon(true);
+			th2.start();
+		});
+
+		th1 = new Thread(task);
+		th1.start();
 	}
+
+//	public void Shutdown() {
+//		try {
+//			if (th1 != null) {
+//				th1.stop();
+//			}
+//		} catch (final ThreadDeath ex) {
+//			// TODO: handle exception
+//		}
+//
+//		try {
+//			if (th2 != null) {
+//				th2.stop();
+//			}
+//		} catch (final ThreadDeath ex) {
+//			// TODO: handle exception
+//		}
+//	}
 
 	/**
 	 * <p>
@@ -412,14 +494,16 @@ public class App extends Application {
 			if (!cb1.isDisabled()) {
 				int selected = cb1.getValue() - 1;
 				try {
-					mElevatorSystem.setTarget(elevatornum-1, selected);
-					int currentfloor = ecc.getBuilding().getElevator(elevatornum-1).getCurrentFloor();
-					if(currentfloor > selected) {
-						mElevatorSystem.setCommittedDirection(elevatornum-1, IElevator.ELEVATOR_DIRECTION_DOWN);
-					}else if(currentfloor < selected) {
-						mElevatorSystem.setCommittedDirection(elevatornum-1, IElevator.ELEVATOR_DIRECTION_UP);
-					}if(currentfloor == selected) {
-						mElevatorSystem.setCommittedDirection(elevatornum-1, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
+					mElevatorSystem.setTarget(elevatornum - 1, selected);
+					int currentfloor = ecc.getBuilding().getElevator(elevatornum - 1).getCurrentFloor();
+					if (currentfloor > selected) {
+						mElevatorSystem.setCommittedDirection(elevatornum - 1, IElevator.ELEVATOR_DIRECTION_DOWN);
+					} else if (currentfloor < selected) {
+						mElevatorSystem.setCommittedDirection(elevatornum - 1, IElevator.ELEVATOR_DIRECTION_UP);
+					}
+					if (currentfloor == selected) {
+						mElevatorSystem.setCommittedDirection(elevatornum - 1,
+								IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
 					}
 				} catch (Exception e) {
 					writeToConsole(e.getMessage());
@@ -494,8 +578,6 @@ public class App extends Application {
 			}
 		}
 
-		writeToConsole("Elevator " + elevatornum + " moved to floor " + (floornum + 1));
-
 		ImageView imageView = new ImageView();
 		switch (doorstatus) {
 		case IElevator.ELEVATOR_DOORS_OPEN:
@@ -509,8 +591,6 @@ public class App extends Application {
 			break;
 		case IElevator.ELEVATOR_DOORS_CLOSING:
 			imageView.setImage(new Image("/ElevatorClosing.png"));
-			break;
-		default:
 			break;
 		}
 
@@ -535,6 +615,18 @@ public class App extends Application {
 	 */
 	private void writeToConsole(String text) {
 		console.setText(console.getText() + System.lineSeparator() + text);
+
+	}
+
+	/**
+	 * <p>
+	 * getTextFromConsole.
+	 * </p>
+	 *
+	 * @return a {@link java.lang.String} object.
+	 */
+	public String getTextFromConsole() {
+		return console.getText();
 	}
 
 	/**
