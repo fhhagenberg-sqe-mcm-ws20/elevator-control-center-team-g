@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxAssert;
@@ -22,6 +23,7 @@ import sqelevator.IElevator;
 public class AppTest {
 	private Button button;
 	MockBuilding mockBuilding;
+	App app;
 
 	/**
 	 * Will be called with {@code @Before} semantics, i. e. before each test method.
@@ -68,9 +70,15 @@ public class AppTest {
 		mockBuilding.mElevators[0].mElevatorSpeed = 817;
 		mockBuilding.mElevators[0].mElevatorAccel = 4;
 
-		var app = new App(mockBuilding);
+		app = new App(mockBuilding);
 		app.start(stage);
 	}
+	
+	@AfterEach
+    public void CleanupThreads(){
+        System.out.println("After Each CleanupThreads() method called");
+        app.Shutdown();
+    }
 
 	/**
 	 * @param robot - Will be injected by the test runner.

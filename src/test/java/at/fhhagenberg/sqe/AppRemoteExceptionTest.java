@@ -4,6 +4,7 @@ package at.fhhagenberg.sqe;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -70,6 +71,12 @@ public class AppRemoteExceptionTest {
         app = new App(mockBuilding);
         app.start(stage);
     }
+    
+    @AfterEach
+    public void CleanupThreads(){
+        System.out.println("After Each CleanupThreads() method called");
+        app.Shutdown();
+    }
 
     @Test
     public void testInitialConnect() throws InterruptedException {
@@ -87,11 +94,14 @@ public class AppRemoteExceptionTest {
         task.setOnSucceeded( e -> {
 
         });
-        new Thread(task).start();
+        Thread th = new Thread(task);
+        th.start();
 
 
         TimeUnit.SECONDS.sleep(2);
         app.isMock = true;
+        
+        th.stop();
     }
 
     @Test

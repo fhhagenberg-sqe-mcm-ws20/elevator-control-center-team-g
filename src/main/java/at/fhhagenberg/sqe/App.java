@@ -59,6 +59,9 @@ public class App extends Application {
 	private final String OurOrange = "#ff8c00";
 
 	boolean isMock = false;
+	
+	Thread th1 = null;
+	Thread th2 = null;
 
 	/**
 	 * <p>
@@ -144,7 +147,7 @@ public class App extends Application {
 				}
 			}
 			// update in thread. dont quite know why, but this is needed
-			Thread thread = new Thread() {
+			Thread th2 = new Thread() {
 				@Override
 				public void run() {
 					while (true) {
@@ -173,14 +176,23 @@ public class App extends Application {
 					}
 				}
 			};
-			thread.setDaemon(true);
-			thread.start();
+			th2.setDaemon(true);
+			th2.start();
 		});
 
-		new Thread(task).start();
-
+		th1 = new Thread(task);
+		th1.start();
 	}
 
+	public void Shutdown() {
+		if(th1 != null) {
+			th1.stop();
+		}
+		if(th2 != null) {
+			th2.stop();
+		}
+	}
+	
 	/**
 	 * <p>
 	 * InitFromBuilding.
