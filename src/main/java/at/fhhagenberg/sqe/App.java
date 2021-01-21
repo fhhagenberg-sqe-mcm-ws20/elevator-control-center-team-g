@@ -592,8 +592,6 @@ public class App extends Application {
 		case IElevator.ELEVATOR_DOORS_CLOSING:
 			imageView.setImage(new Image("/ElevatorClosing.png"));
 			break;
-		default:
-			break;
 		}
 
 		gp.add(imageView, 0, gp.getRowCount() - floornum - 1);

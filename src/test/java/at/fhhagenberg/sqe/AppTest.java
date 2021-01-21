@@ -87,6 +87,7 @@ public class AppTest {
 	@Test
 	public void testButtonWithText(FxRobot robot) throws InterruptedException {
 		TimeUnit.SECONDS.sleep(10);
+		app.getTextFromConsole();
 	}
 
 	/**
