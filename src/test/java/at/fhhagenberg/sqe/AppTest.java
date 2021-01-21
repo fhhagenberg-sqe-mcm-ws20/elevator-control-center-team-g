@@ -74,11 +74,11 @@ public class AppTest {
 		app.start(stage);
 	}
 	
-	@AfterEach
-    public void CleanupThreads(){
-        System.out.println("After Each CleanupThreads() method called");
-        app.Shutdown();
-    }
+//	@AfterEach
+//    public void CleanupThreads(){
+//        System.out.println("After Each CleanupThreads() method called");
+//        app.Shutdown();
+//    }
 
 	/**
 	 * @param robot - Will be injected by the test runner.

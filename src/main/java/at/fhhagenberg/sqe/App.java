@@ -3,7 +3,6 @@ package at.fhhagenberg.sqe;
 import at.fhhagenberg.sqe.model.Building;
 import at.fhhagenberg.sqe.model.Elevator;
 import at.fhhagenberg.sqe.model.Floor;
-import at.fhhagenberg.sqe.util.ClockTickChangeException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -31,11 +30,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import sqelevator.IElevator;
-
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +54,7 @@ public class App extends Application {
 	private final String OurOrange = "#ff8c00";
 
 	boolean isMock = false;
-	
+
 	Thread th1 = null;
 	Thread th2 = null;
 
@@ -76,16 +71,21 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>Constructor for App.</p>
+	 * <p>
+	 * Constructor for App.
+	 * </p>
 	 */
-	public App(){}
+	public App() {
+	}
 
 	/**
-	 * <p>Connect.</p>
+	 * <p>
+	 * Connect.
+	 * </p>
 	 *
 	 * @return a {@link sqelevator.IElevator} object.
 	 */
-	public IElevator Connect() {
+	public IElevator connect() {
 		while (true) {
 			try {
 				if (!isMock) {
@@ -126,13 +126,13 @@ public class App extends Application {
 		Task<IElevator> task = new Task<IElevator>() {
 			@Override
 			public IElevator call() {
-				return Connect();
+				return connect();
 			}
 		};
 
 		task.setOnSucceeded(e -> {
 
-			if(!isMock)
+			if (!isMock)
 				mElevatorSystem = task.getValue();
 
 			while (true) {
@@ -147,7 +147,7 @@ public class App extends Application {
 				}
 			}
 			// update in thread. dont quite know why, but this is needed
-			Thread th2 = new Thread() {
+			th2 = new Thread() {
 				@Override
 				public void run() {
 					while (true) {
@@ -162,7 +162,7 @@ public class App extends Application {
 									} catch (Exception e) {
 										// reconnect and retry
 										writeToConsole("Connection to Elevator lost, trying to reconnect");
-										Connect();
+										connect();
 									}
 								}
 							});
@@ -171,7 +171,7 @@ public class App extends Application {
 						} catch (Exception e) {
 							// reconnect and retry
 							writeToConsole("Connection to Elevator lost, trying to reconnect");
-							Connect();
+							connect();
 						}
 					}
 				}
@@ -184,15 +184,24 @@ public class App extends Application {
 		th1.start();
 	}
 
-	public void Shutdown() {
-		if(th1 != null) {
-			th1.stop();
-		}
-		if(th2 != null) {
-			th2.stop();
-		}
-	}
-	
+//	public void Shutdown() {
+//		try {
+//			if (th1 != null) {
+//				th1.stop();
+//			}
+//		} catch (final ThreadDeath ex) {
+//			// TODO: handle exception
+//		}
+//
+//		try {
+//			if (th2 != null) {
+//				th2.stop();
+//			}
+//		} catch (final ThreadDeath ex) {
+//			// TODO: handle exception
+//		}
+//	}
+
 	/**
 	 * <p>
 	 * InitFromBuilding.
@@ -612,7 +621,9 @@ public class App extends Application {
 	}
 
 	/**
-	 * <p>getTextFromConsole.</p>
+	 * <p>
+	 * getTextFromConsole.
+	 * </p>
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */

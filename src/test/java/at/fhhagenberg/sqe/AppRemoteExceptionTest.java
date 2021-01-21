@@ -72,11 +72,11 @@ public class AppRemoteExceptionTest {
         app.start(stage);
     }
     
-    @AfterEach
-    public void CleanupThreads(){
-        System.out.println("After Each CleanupThreads() method called");
-        app.Shutdown();
-    }
+//    @AfterEach
+//    public void CleanupThreads(){
+//        System.out.println("After Each CleanupThreads() method called");
+//        app.Shutdown();
+//    }
 
     @Test
     public void testInitialConnect() throws InterruptedException {
@@ -87,7 +87,7 @@ public class AppRemoteExceptionTest {
         Task<IElevator> task = new Task<IElevator>() {
             @Override
             protected IElevator call() throws Exception {
-                return app.Connect();
+                return app.connect();
             }
         };
 
