@@ -34,7 +34,7 @@ public class MainTest {
 		Main m = new Main();
 		
 		try {
-			m.main(null);
+			Main.main(null);
 		} catch (Exception e) {
 		}
 		
