@@ -32,6 +32,12 @@ public class MainTest {
 	@Test
 	public void testMainDoesntCrash(FxRobot robot) throws InterruptedException {
 		Main m = new Main();
+		
+		try {
+			m.main(null);
+		} catch (Exception e) {
+		}
+		
 		TimeUnit.SECONDS.sleep(2);
 	}
 
